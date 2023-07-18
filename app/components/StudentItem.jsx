@@ -9,25 +9,25 @@ export const StudentItem = ({student, handleWeekOneAttendance, handleWeekTwoAtte
 
     const handleSelect = (e) => {
         if(e.target.parentElement.parentElement.id === "weekOne") {
-            handleWeekOneAttendance(student, e.target.value)
+            handleWeekOneAttendance(student.name, e.target.value)
             setAttendanceIsSelected(true)
         }
 
         if(e.target.parentElement.parentElement.id === "weekTwo") {
-            handleWeekTwoAttendance(student, e.target.value)
+            handleWeekTwoAttendance(student.name, e.target.value)
             setAttendanceIsSelected(true)
         }
     }
 
   return (
     <li className={`grid grid-cols-4 mb-6 px-4 py-4 border-2 border-gray-200 ${attendanceIsSelected ? "bg-green-200" : "bg-gray-100"}  rounded`}>
-        <span className="ps-2">{student}</span>
+        <span className="ps-2">{student.name}</span>
         <select className="text-center" defaultValue="null" required onChange={handleSelect}>
             <option value="null" disabled>attendance</option>
             <option value="present">present</option>
             <option value="absent">absent</option>
         </select>
-        <span className="text-center">45 mins</span>
+        <span className="text-center">{student.duration}</span>
         {attendanceIsSelected ? 
             <BsCheckCircle size="1.3rem" color="#3fa83f" className="mx-auto" />
         :

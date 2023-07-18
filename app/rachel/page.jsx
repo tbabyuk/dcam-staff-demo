@@ -1,13 +1,14 @@
 "use client"
 
 import RachelStudentModal from "../components/RachelStudentModal"
-
 import { useState, useEffect } from "react"
-
 
 
 const RachelPage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
+
+
+  // console.log("database:", db)
 
   const closeModal = () => {
     setModalIsOpen(false)

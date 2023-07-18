@@ -2,24 +2,51 @@
 
 import { useState, useEffect } from "react"
 import { StudentItem } from "./StudentItem"
+import { collection, getDocs, doc, addDoc, setDoc, serverTimestamp } from "firebase/firestore"
+import { db } from "@components/firebase/config"
 
-const rachelStudents = ["Robin", "Khatereh", "Michaela", "Marcus", "Rachel"]
+const studentsColRef = collection(db, "rachel-students")
+const submissionsColRef = collection(db, "rachel-submissions")
+
+// const rachelStudents = ["Robin", "Khatereh", "Michaela", "Marcus", "Rachel"]
 
 
 export const RachelStudentModal= ({closeModal}) => {
 
+  const [rachelStudents, setRachelStudents] = useState([])
   const [weekOneAttendance, setWeekOneAttendance] = useState({})
   const [weekTwoAttendance, setWeekTwoAttendance] = useState({})
 
   const [weekOneSubmissionCompleted, setWeekOneSubmissionCompleted] = useState(false)
   const [weekTwoSubmissionCompleted, setWeekTwoSubmissionCompleted] = useState(false)
 
-  console.log(weekOneAttendance)
+  // console.log("here are Rachel's students:", rachelStudents)
 
 
-  const handleSubmit = (e) => {
+  const handleSubmitWeekOne = async (e) => {
+
+    // const weekOneDocRef = doc(db, "rachel-submissions", "week-1")
+
     e.preventDefault()
 
+    await setDoc(doc(db, "rachel-submissions", "week-1"), {
+        submissions: weekOneAttendance,
+        submitted: true,
+        created_at: serverTimestamp()
+    })
+  }
+
+  const handleSubmitWeekTwo = async (e) => {
+
+    // const weekOneDocRef = doc(db, "rachel-submissions", "week-1")
+
+    e.preventDefault()
+
+    await setDoc(doc(db, "rachel-submissions", "week-2"), {
+        submissions: weekTwoAttendance,
+        submitted: true,
+        created_at: serverTimestamp()
+    })
   }
 
   const handleWeekOneAttendance = (student, value) => {
@@ -35,6 +62,9 @@ export const RachelStudentModal= ({closeModal}) => {
 
   useEffect(() => {
 
+    console.log("week 1 length:", Object.keys(weekOneAttendance).length)
+    console.log("week 1 attendance:", weekOneAttendance)
+    console.log("rachel students length:", rachelStudents.length)
     if(Object.keys(weekOneAttendance).length - 1 === rachelStudents.length) {
       setWeekOneSubmissionCompleted(true)
     }
@@ -45,12 +75,29 @@ export const RachelStudentModal= ({closeModal}) => {
   }, [weekOneAttendance, weekTwoAttendance] )
 
 
+  useEffect(() => {
+
+    // fetch Rachel student info upon first render
+    const fetchDocs = async () => {
+
+      const studentArray = []
+      const snapshot = await getDocs(studentsColRef)
+      snapshot.forEach((doc) => studentArray.push(doc.data()))
+
+      console.log(studentArray)
+      setRachelStudents((prev) => ([...studentArray]))
+    }
+    fetchDocs()
+
+  }, [])
+
+
   return (
     <div className="absolute top-0 left-0 bg-black bg-opacity-60 h-full w-full">
             <button className="absolute right-0 -top-10 text-white text-[5rem]" onClick={closeModal}>&times;</button>
       <div className="modal grid grid-cols-2 w-[85%] h-[90%] bg-white mt-8 mx-auto overflow-auto">
           {/* week 1 form */}
-          <form className="p-8 border-r-2 border-gray-100" onSubmit={handleSubmit}>
+          <form className="p-16 border-r-2 border-gray-100" onSubmit={handleSubmitWeekOne}>
               <p className="mb-8">Week of: (week 1)</p>
               <div className="grid grid-cols-4 px-4 font-semibold uppercase mb-3">
                 <span className="text-center">student</span>
@@ -63,14 +110,14 @@ export const RachelStudentModal= ({closeModal}) => {
                   <StudentItem key={index} student={student} handleWeekOneAttendance={handleWeekOneAttendance} />
                 ))}
               </ul>
-              <textarea className="w-full p-2 mb-8" placeholder="Enter any notes you might have pertaining to the attendance here" />
+              <textarea className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here" />
               <div className="text-center">
                 <button className={`py-3 px-4 rounded mx-auto ${weekOneSubmissionCompleted && "bg-green-200"}`} disabled={!weekOneSubmissionCompleted}>Submit Attendance</button>
               </div>
           </form>
 
           {/* week 2 form */}
-          <form className="weekTwo p-8">
+          <form className="weekTwo p-16" onSubmit={handleSubmitWeekTwo}>
               <p className="mb-8">Week of: (week 2)</p>
               <div className="grid grid-cols-4 px-4 font-semibold uppercase mb-3">
                 <span className="text-center">student</span>
@@ -83,7 +130,7 @@ export const RachelStudentModal= ({closeModal}) => {
                   <StudentItem key={index} student={student} handleWeekTwoAttendance={handleWeekTwoAttendance} />
                 ))}
               </ul>
-              <textarea className="w-full p-2 mb-8" placeholder="Enter any notes you might have pertaining to the attendance here" />
+              <textarea className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here" />
               <div className="text-center">
               <button className={`py-3 px-4 rounded mx-auto ${weekTwoSubmissionCompleted && "bg-green-200"}`} disabled={!weekOneSubmissionCompleted}>Submit Attendance</button>
               </div>
