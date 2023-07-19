@@ -9,12 +9,12 @@ export const StudentItem = ({student, handleWeekOneAttendance, handleWeekTwoAtte
 
     const handleSelect = (e) => {
         if(e.target.parentElement.parentElement.id === "weekOne") {
-            handleWeekOneAttendance(student.name, e.target.value)
+            handleWeekOneAttendance(student, e.target.value)
             setAttendanceIsSelected(true)
         }
 
         if(e.target.parentElement.parentElement.id === "weekTwo") {
-            handleWeekTwoAttendance(student.name, e.target.value)
+            handleWeekTwoAttendance(student, e.target.value)
             setAttendanceIsSelected(true)
         }
     }

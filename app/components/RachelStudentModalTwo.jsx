@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { StudentItem } from "./StudentItem"
+// import { StudentItem } from "./StudentItem"
 import { collection, getDocs, doc, addDoc, setDoc, serverTimestamp } from "firebase/firestore"
 import { db } from "@components/firebase/config"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {sub, format} from "date-fns"
+import { BsCheckCircle, BsCircle } from "react-icons/bs";
+import { StudentItemTwo } from "./StudentItemTwo";
 
 
 const studentsColRef = collection(db, "rachel-students")
@@ -15,10 +17,13 @@ const submissionsColRef = collection(db, "rachel-submissions")
 // const rachelStudents = ["Robin", "Khatereh", "Michaela", "Marcus", "Rachel"]
 
 
-export const RachelStudentModal= ({closeModal}) => {
+export const RachelStudentModalTwo = ({closeModal}) => {
   const notify = () => toast("Wow so easy!");
   const weekOneNotesRef = useRef()
   const weekTwoNotesRef = useRef()
+
+  const [attendanceIsSelected, setAttendanceIsSelected] = useState(false)
+
 
   const [payPeriodIsSelected, setPayPeriodIsSelected] = useState(false)
   const [weekOnePayPeriod, setWeekOnePayPeriod] = useState({})
@@ -89,6 +94,26 @@ export const RachelStudentModal= ({closeModal}) => {
       toast.success("Congrats! You have submitted your attendance for week two!")
   }
 
+  const handleWeekOneSelect = (e) => {
+        setAttendanceIsSelected(true)
+        if(e.target.value === "present") {
+            e.target.parentElement.parentElement.classList.add("bg-green-200", "form-checkbox")
+        } else {
+            e.target.parentElement.parentElement.classList.add("bg-red-200")
+        }
+  }
+
+  const handleWeekTwoSelect = (e) => {
+        setAttendanceIsSelected(true)
+        if(e.target.value === "present") {
+            e.target.parentElement.parentElement.classList.add("bg-green-200")
+        } else {
+            e.target.parentElement.parentElement.classList.add("bg-red-200")
+        }
+  }
+
+
+
   const handleWeekOneAttendance = (student, value) => {
     console.log("I handle week one attendance")
     setWeekOneAttendance((prev) => ({...prev, [student.name]: {attendance: value, payout: value === "absent" ? 0 : student.pay}}))
@@ -143,18 +168,23 @@ export const RachelStudentModal= ({closeModal}) => {
           <div className="grid grid-cols-2">
             {/* week 1 form */}
             <form className="px-16 py-10 border-r-2 border-gray-100" onSubmit={handleSubmitWeekOne}>
-                <p className="mb-8 text-center text-green-700 font-bold"><span className="me-4">Week of:</span>{weekOnePayPeriod ? `${weekOnePayPeriod.start} - ${weekOnePayPeriod.end}` : "d"}</p>
-                <div className="grid grid-cols-4 px-4 font-semibold uppercase mb-3">
-                  <span className="text-center">student</span>
-                  <span className="text-center">attendance</span>
-                  <span className="text-center">duration</span>
-                  <span className="text-center">status</span>
-                </div>
-                <ul className="mb-8" id="weekOne">
-                  {rachelStudents?.map((student, index) => (
-                    <StudentItem key={index} student={student} handleWeekOneAttendance={handleWeekOneAttendance} />
-                  ))}
-                </ul>
+                <h3 className="mb-8 text-center text-green-700 font-semibold text-lg"><span className="me-4">Week of:</span>{weekOnePayPeriod ? `${weekOnePayPeriod.start} - ${weekOnePayPeriod.end}` : "d"}</h3>
+                    <table className="bg-gray-50 w-full border-2 border-gray-200">
+                        <thead className="bg-gray-200">
+                            <tr>
+                                <th className="py-3">Student</th>
+                                <th>Attendance</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rachelStudents?.map((student, index) => (
+                                <StudentItemTwo key={index} student={student} />
+                            ))}
+                        </tbody>
+                    </table>
+                {/* </ul> */}
                 <textarea className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here" ref={weekOneNotesRef}/>
                 <div className="text-center">
                   <button className={`py-3 px-4 rounded mx-auto ${weekOneAttendanceCompleted && "bg-green-200"}`} disabled={!weekOneAttendanceCompleted}>Submit Attendance</button>
@@ -162,18 +192,23 @@ export const RachelStudentModal= ({closeModal}) => {
             </form>
             {/* week 2 form */}
             <form className="weekTwo px-16 py-10" onSubmit={handleSubmitWeekTwo}>
-                <p className="mb-8 text-center text-green-700 font-bold"><span className="me-4">Week of:</span> {weekTwoPayPeriod ? `${weekTwoPayPeriod.start} - ${weekTwoPayPeriod.end}` : "d"}</p>
-                <div className="grid grid-cols-4 px-4 font-semibold uppercase mb-3">
-                  <span className="text-center">student</span>
-                  <span className="text-center">attendance</span>
-                  <span className="text-center">duration</span>
-                  <span className="text-center">status</span>
-                </div>
-                <ul className="mb-8" id="weekTwo">
-                  {rachelStudents?.map((student, index) => (
-                    <StudentItem key={index} student={student} handleWeekTwoAttendance={handleWeekTwoAttendance} />
-                  ))}
-                </ul>
+                <h3 className="mb-8 text-center text-green-700 font-semibold text-lg"><span className="me-4">Week of:</span> {weekTwoPayPeriod ? `${weekTwoPayPeriod.start} - ${weekTwoPayPeriod.end}` : "d"}</h3>
+                    <table className="bg-gray-50 w-full border-2 border-gray-200">
+                        <thead className="bg-gray-200">
+                            <tr>
+                                <th className="py-3">Student</th>
+                                <th>Attendance</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rachelStudents?.map((student, index) => (
+                                <StudentItemTwo key={index} student={student} />
+                            ))}
+                        </tbody>
+                    </table>
+                {/* </ul> */}
                 <textarea className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here" ref={weekTwoNotesRef}/>
                 <div className="text-center">
                 <button className={`py-3 px-4 rounded mx-auto ${weekTwoAttendanceCompleted && "bg-green-200"}`} disabled={!weekTwoAttendanceCompleted}>Submit Attendance</button>
@@ -190,4 +225,4 @@ export const RachelStudentModal= ({closeModal}) => {
   )
 }
 
-export default RachelStudentModal
+export default RachelStudentModalTwo

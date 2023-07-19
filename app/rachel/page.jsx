@@ -1,6 +1,7 @@
 "use client"
 
 import RachelStudentModal from "../components/RachelStudentModal"
+import RachelStudentModalTwo from "../components/RachelStudentModalTwo"
 import { useState, useEffect } from "react"
 
 
@@ -17,14 +18,15 @@ const RachelPage = () => {
     return (
       <>
       <main className="p-10 w-full">
-          <p>Rachel's Page</p>
-          <h2>What would you like to do today?</h2>
-          <button onClick={() => setModalIsOpen(true)}>Log My Hours</button>
+          <h2 className="mb-8">Hi Rachel, what would you like to do today?</h2>
+          <button onClick={() => setModalIsOpen(true)} className="bg-green-500 text-white hover:bg-green-400 py-3 px-6 rounded">Log My Work Hours</button>
+          <p>Date:</p>
       </main>
 
       {modalIsOpen && (
 
-        <RachelStudentModal closeModal={closeModal} />
+        // <RachelStudentModal closeModal={closeModal} />
+        <RachelStudentModalTwo closeModal={closeModal} />
       )}
       </>
     )
