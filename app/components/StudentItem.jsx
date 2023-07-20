@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { BsCheckCircle, BsCircle } from "react-icons/bs"
+import { BsCheckCircle, BsXCircle, BsCircle } from "react-icons/bs"
 
 
 export const StudentItem = ({student, attendance, handleAttendance}) => {
@@ -9,8 +9,8 @@ export const StudentItem = ({student, attendance, handleAttendance}) => {
 
 //   const [attendanceIsSelected, setAttendanceIsSelected] = useState(false)
 
-  const [isPresent, setIsPresent] = useState(false)
   const [takeAttendance, setTakeAttendance] = useState({})
+  const [isPresent, setIsPresent] = useState(null)
 
 
   console.log(takeAttendance)
@@ -18,26 +18,32 @@ export const StudentItem = ({student, attendance, handleAttendance}) => {
 //   console.log(studentAttendance)
 
 
+
+  const setIcon = () => {
+    if(isPresent === true) {
+        return <BsCheckCircle size="1.1rem" color="green" className="mx-auto" />
+    } else if (isPresent === false) {
+        return <BsXCircle size="1.1rem" color="red" className="mx-auto" />
+    } else {
+        return <BsCircle size="1.1rem" className="mx-auto" />
+    }
+  }
+
+
+
   const handleSelect = (e) => {
 
     console.log("get week:", e.target.parentElement.parentElement.parentElement.id)
 
+    setIsPresent(JSON.parse(e.target.value))
+
     handleAttendance(student, e)
 
-
-    if(e.target.value === "true") {
-        e.target.parentElement.parentElement.classList.add("bg-green-200")
-    } else if (e.target.value === "false") {
-        e.target.parentElement.parentElement.classList.add("bg-red-200")
-    } else {
-        e.target.parentElement.parentElement.classList.add("")
-    }
-    
   }
 
 
   return (
-        <tr className={`${isPresent ? "bg-green-200" : "bg-red=200"}`}>
+        <tr>
             <td className="text-center p-3">{student.name}</td>
             <td className="text-center">
                 <select className="bg-gray-200" defaultValue={"attendance"} onChange={handleSelect}>
@@ -47,14 +53,7 @@ export const StudentItem = ({student, attendance, handleAttendance}) => {
                 </select>
             </td>
             <td className="text-center">{student.duration}</td>
-            <td>
-                {/* {attendanceIsSelected ? 
-                        <BsCheckCircle size="1.1rem" color="#3fa83f" className="mx-auto" />
-                    :
-                        <BsCircle size="1.1rem" className="mx-auto" />
-                } */}
-                <BsCircle size="1.1rem" className="mx-auto" />
-            </td>
+            <td>{setIcon()}</td>
         </tr>  
     )
 }

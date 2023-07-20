@@ -13,22 +13,18 @@ import { StudentItem } from "@components/app/components/StudentItem";
 const studentsColRef = collection(db, "rachel-students")
 const submissionsColRef = collection(db, "rachel-submissions")
 
-// const rachelStudents = ["Robin", "Khatereh", "Michaela", "Marcus", "Rachel"]
 
 
-export const RachelHoursWeekOne = ({closeModal}) => {
+export const RachelHoursWeekOne = () => {
   const notify = () => toast("Wow so easy!");
   const weekOneNotesRef = useRef()
   const weekTwoNotesRef = useRef()
 
   const [payPeriodIsSelected, setPayPeriodIsSelected] = useState(false)
   const [weekOnePayPeriod, setWeekOnePayPeriod] = useState({})
-  const [weekTwoPayPeriod, setWeekTwoPayPeriod] = useState([])
   const [rachelStudents, setRachelStudents] = useState(null)
   const [weekOneAttendance, setWeekOneAttendance] = useState({})
-  const [weekTwoAttendance, setWeekTwoAttendance] = useState({})
   const [weekOneAttendanceCompleted, setWeekOneAttendanceCompleted] = useState(false)
-  const [weekTwoAttendanceCompleted, setWeekTwoAttendanceCompleted] = useState(false)
 
 
   console.log("showing week 1 attendance:", weekOneAttendance)
@@ -45,21 +41,13 @@ export const RachelHoursWeekOne = ({closeModal}) => {
     const weekOneEndDateFormatted = format(weekOneEndDate, "MMMM d, yyy")
     setWeekOnePayPeriod({start: weekOneStartDateFormatted, end: weekOneEndDateFormatted })
 
-    // week 2 dates
-    const weekTwoStartDate = sub(payDay, {days: 11})
-    const weekTwoStartDateFormatted = format(weekTwoStartDate, "MMMM d, yyy")
-    const weekTwoEndDate = sub(payDay, {days: 5 })
-    const weekTwoEndDateFormatted = format(weekTwoEndDate, "MMMM d, yyy")
-    setWeekTwoPayPeriod({start: weekTwoStartDateFormatted, end: weekTwoEndDateFormatted })  }
+  }
 
 
 
   const handleAttendance = async (student, e) => {
 
-    // setWeekOneAttendance((prev) => ({...prev, [student.name]: {attendance: value, payout: value === "absent" ? 0 : student.pay}}))
     console.log("logging attendance:", student, e.target.parentElement.parentElement.parentElement.id, e.target.value)
-
-    // const currentWeek = e.target.parentElement.parentElement.parentElement.id
 
     setWeekOneAttendance((prev) => ({...prev, 
       [student.name]: {
@@ -71,37 +59,11 @@ export const RachelHoursWeekOne = ({closeModal}) => {
   }
 
 
-  // submit all data for week 1
+  // submit all data for week one
   const handleSubmitWeekOne = async (e) => {
     e.preventDefault()
 
-    // await setDoc(doc(db, "rachel-submissions", "week-1"), {
-    //     submissions: weekOneAttendance,
-    //     notes: weekOneNotesRef.current.value,
-    //     submitted: true,
-    //     created_at: serverTimestamp()
-    // })
-    //   toast.success("Congrats! You have submitted your attendance for week one!")
-
-      // const doc1Ref = doc(db, "rachel-students", "AP45MBfJ6ciFGJGnmEGk")
-      // const doc2Ref = doc(db, "rachel-students", "OYptYQWNaR9pQirFewp7")
-      // const doc3Ref = doc(db, "rachel-students", "RWhKpy5GhZZjMSl520ra")
-
-    //   const michaela2 = {
-    //       "attendance.week1": {
-    //               present: true
-    //       }
-    // }
-
-    // const khatereh2 = {
-    //   "attendance.week1": {
-    //         present: true
-    //     }
-    // }
-
-
     const batch = writeBatch(db)
-
 
     Object.keys(weekOneAttendance).forEach((studentName) => {
 
@@ -112,75 +74,17 @@ export const RachelHoursWeekOne = ({closeModal}) => {
       batch.update(studentDocRef, attendanceData);
     });
 
+    try {
+      await batch.commit()
+      console.log("success!")
+      toast.success("week 1 attendance successfully saved!")
+    } catch(error) {
+      console.log(error.message)
+      toast.error("ooops, it looks like something went wrong! Please ask Terry for help!")
+    }
 
-
-    // batch.update(doc1Ref, weekOneAttendance.Marcus)
-    // batch.update(doc2Ref, weekOneAttendance.Michaela)
-    // batch.update(doc3Ref, weekOneAttendance.Khatereh)
-
-
-    await batch.commit()
 
   }
-
-  // immediately save update attendance to database
-  // const docRef = doc(db, "rachel-students", "AP45MBfJ6ciFGJGnmEGk")
-
-  // await setDoc(docRef, {
-  //     attendance: {
-  //         week1: {
-  //             present: false
-  //         }
-  //     }
-  // }, { merge: true })
-
-
-
-
-
-    // practicing batching - IT WORKED!
-
-
-
-
-
-
-
-//   import { writeBatch, doc, setDoc } from 'firebase/firestore';
-
-// Assuming you have three different documents with their respective data
-// const document1Data = {
-//     field1: 'value1',
-//     field2: 'value2',
-//   };
-  
-//   const document2Data = {
-//     field1: 'value3',
-//     field2: 'value4',
-//   };
-  
-//   const document3Data = {
-//     field1: 'value5',
-//     field2: 'value6',
-//   };
-  
-//   // Create a batch object
-//   const batch = writeBatch(db);
-  
-//   // Get references to the three documents
-//   const document1Ref = doc(db, 'collectionName', 'document1Id');
-//   const document2Ref = doc(db, 'collectionName', 'document2Id');
-//   const document3Ref = doc(db, 'collectionName', 'document3Id');
-  
-//   // Add set operations to the batch for all three documents
-//   batch.set(document1Ref, document1Data);
-//   batch.set(document2Ref, document2Data);
-//   batch.set(document3Ref, document3Data);
-  
-//   // Commit the batch to apply all the set operations
-//   await batch.commit();
-  
-
 
   useEffect(() => {
     // fetch Rachel student info upon first render
@@ -200,10 +104,6 @@ export const RachelHoursWeekOne = ({closeModal}) => {
 
     if(rachelStudents?.length === Object.keys(weekOneAttendance).length) {
       setWeekOneAttendanceCompleted(true)
-    }
-
-    if(rachelStudents?.length === Object.keys(weekTwoAttendance).length) {
-      setWeekTwoAttendanceCompleted(true)
     }
 
   }, [weekOneAttendance] )
