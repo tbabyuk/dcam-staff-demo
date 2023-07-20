@@ -31,11 +31,12 @@ export const RachelHoursWeekOne = ({closeModal}) => {
   const [weekTwoAttendanceCompleted, setWeekTwoAttendanceCompleted] = useState(false)
 
 
+  console.log("showing week 1 attendance:", weekOneAttendance)
+
+
   const handlePayPeriod = (e) => {
     setPayPeriodIsSelected(true)
     const payDay = new Date(e.target.value)
-
-    console.log("logging froggy:", weekOnePayPeriod)
 
     // week 1 dates
     const weekOneStartDate = sub(payDay, {days: 18})
@@ -52,48 +53,86 @@ export const RachelHoursWeekOne = ({closeModal}) => {
     setWeekTwoPayPeriod({start: weekTwoStartDateFormatted, end: weekTwoEndDateFormatted })  }
 
 
-  // submit all data for week 1
-  const handleSubmitWeekOne = async (e) => {
-    e.preventDefault()
-
-    await setDoc(doc(db, "rachel-submissions", "week-1"), {
-        submissions: weekOneAttendance,
-        notes: weekOneNotesRef.current.value,
-        submitted: true,
-        created_at: serverTimestamp()
-    })
-      toast.success("Congrats! You have submitted your attendance for week one!")
-  }
-
-  // submit all data for week 2
-  const handleSubmitWeekTwo = async (e) => {
-    e.preventDefault()
-
-    await setDoc(doc(db, "rachel-submissions", "week-2"), {
-        submissions: weekTwoAttendance,
-        notes: weekOneNotesRef.current.value,
-        submitted: true,
-        created_at: serverTimestamp()
-    })
-      toast.success("Congrats! You have submitted your attendance for week two!")
-  }
 
   const handleAttendance = async (student, e) => {
 
     // setWeekOneAttendance((prev) => ({...prev, [student.name]: {attendance: value, payout: value === "absent" ? 0 : student.pay}}))
     console.log("logging attendance:", student, e.target.parentElement.parentElement.parentElement.id, e.target.value)
 
+    // const currentWeek = e.target.parentElement.parentElement.parentElement.id
 
-    // immediately save update attendance to database
-    // const docRef = doc(db, "rachel-students", "AP45MBfJ6ciFGJGnmEGk")
+    setWeekOneAttendance((prev) => ({...prev, 
+      [student.name]: {
+          "attendance.week1": {
+                  present: JSON.parse(e.target.value)
+            }
+        }
+    }))
+  }
 
-    // await setDoc(docRef, {
-    //     attendance: {
-    //         week1: {
-    //             present: false
-    //         }
+
+  // submit all data for week 1
+  const handleSubmitWeekOne = async (e) => {
+    e.preventDefault()
+
+    // await setDoc(doc(db, "rachel-submissions", "week-1"), {
+    //     submissions: weekOneAttendance,
+    //     notes: weekOneNotesRef.current.value,
+    //     submitted: true,
+    //     created_at: serverTimestamp()
+    // })
+    //   toast.success("Congrats! You have submitted your attendance for week one!")
+
+      // const doc1Ref = doc(db, "rachel-students", "AP45MBfJ6ciFGJGnmEGk")
+      // const doc2Ref = doc(db, "rachel-students", "OYptYQWNaR9pQirFewp7")
+      // const doc3Ref = doc(db, "rachel-students", "RWhKpy5GhZZjMSl520ra")
+
+    //   const michaela2 = {
+    //       "attendance.week1": {
+    //               present: true
+    //       }
+    // }
+
+    // const khatereh2 = {
+    //   "attendance.week1": {
+    //         present: true
     //     }
-    // }, { merge: true })
+    // }
+
+
+    const batch = writeBatch(db)
+
+
+    Object.keys(weekOneAttendance).forEach((studentName) => {
+
+      console.log("object keys:", studentName)
+      const attendanceData = weekOneAttendance[studentName];
+      const studentDocRef = doc(db, 'rachel-students', studentName.toLowerCase());
+    
+      batch.update(studentDocRef, attendanceData);
+    });
+
+
+
+    // batch.update(doc1Ref, weekOneAttendance.Marcus)
+    // batch.update(doc2Ref, weekOneAttendance.Michaela)
+    // batch.update(doc3Ref, weekOneAttendance.Khatereh)
+
+
+    await batch.commit()
+
+  }
+
+  // immediately save update attendance to database
+  // const docRef = doc(db, "rachel-students", "AP45MBfJ6ciFGJGnmEGk")
+
+  // await setDoc(docRef, {
+  //     attendance: {
+  //         week1: {
+  //             present: false
+  //         }
+  //     }
+  // }, { merge: true })
 
 
 
@@ -102,39 +141,7 @@ export const RachelHoursWeekOne = ({closeModal}) => {
     // practicing batching - IT WORKED!
 
 
-//     const doc1Ref = doc(db, "rachel-students", "OYptYQWNaR9pQirFewp7")
-//     const doc2Ref = doc(db, "rachel-students", "RWhKpy5GhZZjMSl520ra")
 
-//     const michaela = {
-//         attendance: {
-//             week1: {
-//                 present: false
-//             },
-//             week2: {
-//                 present: false
-//             }
-//         }
-//    }
-
-//     const khatereh = {
-//         attendance: {
-//             week1: {
-//                 present: false
-//             },
-//             week2: {
-//                 present: false
-//             }
-//         }
-//    }
-
-//    const batch = writeBatch(db)
-
-//    batch.update(doc1Ref, michaela)
-//    batch.update(doc2Ref, khatereh)
-
-
-//    await batch.commit()
-  }
 
 
 
@@ -189,17 +196,17 @@ export const RachelHoursWeekOne = ({closeModal}) => {
 
 
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   if(rachelStudents?.length === Object.keys(weekOneAttendance).length) {
-  //     setWeekOneAttendanceCompleted(true)
-  //   }
+    if(rachelStudents?.length === Object.keys(weekOneAttendance).length) {
+      setWeekOneAttendanceCompleted(true)
+    }
 
-  //   if(rachelStudents?.length === Object.keys(weekTwoAttendance).length) {
-  //     setWeekTwoAttendanceCompleted(true)
-  //   }
+    if(rachelStudents?.length === Object.keys(weekTwoAttendance).length) {
+      setWeekTwoAttendanceCompleted(true)
+    }
 
-  // }, [weekOneAttendance, weekTwoAttendance] )
+  }, [weekOneAttendance] )
 
 
 

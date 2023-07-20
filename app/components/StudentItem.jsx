@@ -7,10 +7,6 @@ import { BsCheckCircle, BsCircle } from "react-icons/bs"
 export const StudentItem = ({student, attendance, handleAttendance}) => {
 
 
-    console.log("logging attendance passed in:", attendance)
-
-    // console.log("Logging attendance:", student.attendance)
-
 //   const [attendanceIsSelected, setAttendanceIsSelected] = useState(false)
 
   const [isPresent, setIsPresent] = useState(false)
@@ -23,21 +19,10 @@ export const StudentItem = ({student, attendance, handleAttendance}) => {
 
 
   const handleSelect = (e) => {
-    handleAttendance(student.name, e)
-
-    const currentWeek = e.target.parentElement.parentElement.parentElement.id
 
     console.log("get week:", e.target.parentElement.parentElement.parentElement.id)
 
-    setTakeAttendance((prev) => ({...prev, 
-        [student.name]: {
-            attendance: {
-                [currentWeek]: {
-                    present: e.target.value
-                }
-            }
-        }
-    }))
+    handleAttendance(student, e)
 
 
     if(e.target.value === "true") {
