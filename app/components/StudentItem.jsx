@@ -4,7 +4,7 @@ import { useState } from "react"
 import { BsCheckCircle, BsXCircle, BsCircle } from "react-icons/bs"
 
 
-export const StudentItem = ({student, attendance, handleAttendance}) => {
+export const StudentItem = ({student, handleAttendance}) => {
 
 
 //   const [attendanceIsSelected, setAttendanceIsSelected] = useState(false)
@@ -43,7 +43,7 @@ export const StudentItem = ({student, attendance, handleAttendance}) => {
 
 
   return (
-        <tr>
+        <tr className="border border-gray-300">
             <td className="text-center p-3">{student.name}</td>
             <td className="text-center">
                 <select className="bg-gray-200" defaultValue={"attendance"} onChange={handleSelect}>
