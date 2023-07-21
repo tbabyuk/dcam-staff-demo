@@ -20,6 +20,7 @@ export const RachelHoursWeekOne = () => {
   const weekOneNotesRef = useRef()
   const weekTwoNotesRef = useRef()
 
+  const [closestPayDay, setClosestPayDay] = useState(null)
   const [payPeriodIsSelected, setPayPeriodIsSelected] = useState(false)
   const [weekOnePayPeriod, setWeekOnePayPeriod] = useState({})
   const [rachelStudents, setRachelStudents] = useState(null)
@@ -30,9 +31,30 @@ export const RachelHoursWeekOne = () => {
   console.log("showing week 1 attendance:", weekOneAttendance)
 
 
-  const handlePayPeriod = (e) => {
+  // get date of closest pay period
+  const getClosestPayPeriod = () => {
+
+    const payDays2023 = ["July 21, 2023", "August 4, 2023", "August 18, 2023", "September 1, 2023", "September 15, 2023", "September 29, 2023", "October 13, 2023", "October 27, 2023", "November 10, 2023", "November 24, 2023", "December 8, 2023", "December 22, 2023"]
+
+    const today = new Date()
+
+    let res;
+
+    for (let i = 0; i < payDays2023.length; i++) {
+      if(new Date(payDays2023[i]) > today) {
+        res = payDays2023[i]
+        break;
+      }
+    }
+    if(res) {
+      setClosestPayDay(res)
+      handlePayPeriod(new Date(res))
+    }
+  }
+
+  // get start and end dates of week 1 pay period
+  const handlePayPeriod = (payDay) => {
     setPayPeriodIsSelected(true)
-    const payDay = new Date(e.target.value)
 
     // week 1 dates
     const weekOneStartDate = sub(payDay, {days: 18})
@@ -40,7 +62,6 @@ export const RachelHoursWeekOne = () => {
     const weekOneEndDate = sub(payDay, {days: 12 })
     const weekOneEndDateFormatted = format(weekOneEndDate, "MMMM d, yyy")
     setWeekOnePayPeriod({start: weekOneStartDateFormatted, end: weekOneEndDateFormatted })
-
   }
 
 
@@ -53,13 +74,15 @@ export const RachelHoursWeekOne = () => {
       [student.name]: {
           "attendance.week1": {
                   present: JSON.parse(e.target.value)
-            }
+            },
+          "payday": closestPayDay,
+          "submitted": true
         }
     }))
   }
 
 
-  // submit all data for week one
+  // submit all attendance for week one
   const handleSubmitWeekOne = async (e) => {
     e.preventDefault()
 
@@ -87,6 +110,9 @@ export const RachelHoursWeekOne = () => {
   }
 
   useEffect(() => {
+
+    getClosestPayPeriod()
+
     // fetch Rachel student info upon first render
     const fetchDocs = async () => {
       const studentArray = []
@@ -113,14 +139,9 @@ export const RachelHoursWeekOne = () => {
   return (
     <>
         <div className="flex flex-col w-full">
-            <div className="px-16 h-20 bg-red-200 flex items-center font-semibold col-span-2">
-                <span className="me-4">Choose payday for which you are recording your hours:</span>
-                <select onChange={handlePayPeriod}>
-                    <option value="July 21, 2023">July 21, 2023</option>
-                    <option value="August 4, 2023">August 4, 2023</option>
-                    <option value="August 18, 2023">August 18, 2023</option>
-                    <option value="September 1, 2023">August 18, 2023</option>
-                </select>
+            <div className="px-16 h-20 bg-blue-600 flex  justify-between items-center font-semibold col-span-2">
+                <Link href="/rachel"><button>Back to Main Page</button></Link>
+                <h2 className="me-4">Your next pay day is: {closestPayDay && closestPayDay}</h2>
                 <Link href="/rachel/hours/week2"><button>Go To Week 2</button></Link>
             </div>
 
@@ -144,7 +165,7 @@ export const RachelHoursWeekOne = () => {
                 </table>
                 <textarea rows="4" className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here. This could include things like makeup lessons, teacher meetings, etc. The more detailed information, the better!" ref={weekOneNotesRef}/>
                 <div className="text-center">
-                <button className={`py-3 px-4 rounded mx-auto ${weekOneAttendanceCompleted && "bg-green-200"}`} disabled={!weekOneAttendanceCompleted}>Submit Attendance</button>
+                <button className={`py-3 px-4 rounded mx-auto ${weekOneAttendanceCompleted && "bg-green-200"}`} disabled={!weekOneAttendanceCompleted}>Submit Week 1 Attendance</button>
                 </div>
             </form>
         </div>

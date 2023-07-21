@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {sub, format} from "date-fns"
 import { BsCheckCircle, BsCircle } from "react-icons/bs";
-import { StudentItemTwo } from "./StudentItem";
+import { StudentItem } from "./StudentItem";
 
 
 const studentsColRef = collection(db, "rachel-students")
