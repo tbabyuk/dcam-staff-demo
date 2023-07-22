@@ -1,18 +1,16 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { collection, getDocs, doc, addDoc, setDoc, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore"
+import { collection, getDocs, doc, writeBatch, setDoc } from "firebase/firestore"
 import { db } from "@components/firebase/config"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {sub, format} from "date-fns"
 import Link from "next/link"
 import { StudentItem } from "@components/app/components/StudentItem";
+import { FiArrowLeft } from "react-icons/fi"
 import { useRouter } from "next/navigation";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi"
 
-
-const studentsColRef = collection(db, "rachel-students")
 
 
 export const RachelHoursWeekTwo = () => {
@@ -27,8 +25,6 @@ export const RachelHoursWeekTwo = () => {
   const [weekTwoAttendance, setWeekTwoAttendance] = useState({})
   const [weekTwoAttendanceCompleted, setWeekTwoAttendanceCompleted] = useState(false)
 
-
-  console.log("showing week 2 attendance:", weekTwoAttendance)
 
 
   // get date of closest pay period
@@ -52,9 +48,7 @@ export const RachelHoursWeekTwo = () => {
     }
   }
 
-
   const handlePayPeriod = (payDay) => {
-    setPayPeriodIsSelected(true)
 
     // week 2 dates
     const weekTwoStartDate = sub(payDay, {days: 11})
@@ -82,10 +76,11 @@ export const RachelHoursWeekTwo = () => {
   }
 
 
-  // submit all data for week one
+  // submit attendance for week two
   const handleSubmitWeekTwo = async (e) => {
     e.preventDefault()
-
+  
+    // save attendance for all students to db
     const batch = writeBatch(db)
 
     Object.keys(weekTwoAttendance).forEach((studentName) => {
@@ -93,37 +88,70 @@ export const RachelHoursWeekTwo = () => {
       console.log("object keys:", studentName)
       const attendanceData = weekTwoAttendance[studentName];
       const studentDocRef = doc(db, 'rachel-students', studentName.toLowerCase());
-    
       batch.update(studentDocRef, attendanceData);
     });
 
+      const notesDocRef = doc(db, "meta-data", "rachel")
+      const notesObject = {
+        payday: closestPayDay,
+        week2AttendanceSubmitted: true,
+        week2Notes: weekTwoNotesRef.current.value
+      }
+
     try {
-      await batch.commit()
-      console.log("success!")
-      toast.success("week 2 attendance successfully saved!")
-      setTimeout(() => {
-        router.push("/success")
-      }, 2000)
+        await batch.commit()
+        await setDoc(notesDocRef, notesObject, {merge: true})
+        console.log("success!")
+        toast.success("week 2 attendance successfully saved!")
+        setTimeout(() => {
+          router.push("/success")
+        }, 2000)
     } catch(error) {
-      console.log(error.message)
-      toast.error("ooops, it looks like something went wrong! Please ask Terry for help!")
+        console.log(error.message)
+        toast.error("ooops, it looks like something went wrong! Please ask Terry for help!")
     }
+  }
+  
+  // if attendance has not beeen submitted yet, get student data for the page
+  const fetchData = async () => {
+
+    getClosestPayPeriod()
+
+      // fetch Rachel student info upon first render
+      const studentsColRef = collection(db, "rachel-students")
+
+      const studentArray = []
+      const snapshot = await getDocs(studentsColRef)
+      snapshot.forEach((doc) => studentArray.push(doc.data()))
+      setRachelStudents([...studentArray])
   }
 
   useEffect(() => {
 
-    getClosestPayPeriod()
+    // check if attendance for week 1 has already been submitted
+    const metaColRef = collection(db, "meta-data")
 
-    // fetch Rachel student info upon first render
     const fetchDocs = async () => {
-      const studentArray = []
-      const snapshot = await getDocs(studentsColRef)
-      snapshot.forEach((doc) => studentArray.push(doc.data()))
-      setRachelStudents((prev) => ([...studentArray]))
+      const snapshot = await getDocs(metaColRef)
+  
+      snapshot.forEach((doc) => {
+        if(doc.data().week1AttendanceSubmitted && doc.data().week2AttendanceSubmitted) {
+            router.push("/success")
+        } else if (!doc.data().week1AttendanceSubmitted) {
+            toast.error("Please submit week 1 attendance before moving on to week 2. Redirecting...")
+            setTimeout(() => {
+              router.push("/rachel/hours/week1")
+            }, 2000)
+        } else {
+            fetchData()
+        }
+      })
     }
 
     fetchDocs()
+
   }, [])
+
 
 
 
@@ -166,7 +194,7 @@ export const RachelHoursWeekTwo = () => {
                 </table>
                 <textarea rows="4" className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here. This could include things like makeup lessons, teacher meetings, etc. The more detailed information, the better!" ref={weekTwoNotesRef}/>
                 <div className="text-center">
-                <button className={`py-3 px-4 rounded mx-auto dcam-btn-inactive text-white ${weekTwoAttendanceCompleted && "bg-green-200"}`} disabled={!weekTwoAttendanceCompleted}>Submit Week 1 Attendance</button>
+                <button className={`py-3 px-4 rounded mx-auto dcam-btn-inactive text-white ${weekTwoAttendanceCompleted && "bg-green-200"}`} /*disabled={!weekTwoAttendanceCompleted}*/>Submit Week 2 Attendance</button>
                 </div>
             </form>
         </div>
@@ -174,62 +202,7 @@ export const RachelHoursWeekTwo = () => {
       <ToastContainer
         position="top-center"
       />
-  </>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//     <>
-//         <div className="flex flex-col w-full">
-//             <div className="px-16 h-20 bg-blue-600 flex  justify-between items-center font-semibold col-span-2">
-//                 <Link href="/rachel"><button>Back to Main Page</button></Link>
-//                 <h2 className="me-4">Your next pay day is: {closestPayDay && closestPayDay}</h2>
-//                 <Link href="/rachel/hours/week2"><button></button></Link>
-//             </div>
-
-//             {/* week 1 form */}
-//             <form className=" px-52 py-10 border-r-2 border-gray-100" onSubmit={handleSubmitWeekOne}>
-//                 <p className="mb-8 text-center text-green-700 font-bold"><span className="me-4">Week 2 Pay Period:</span>{weekTwoPayPeriod ? `${weekTwoPayPeriod.start} - ${weekTwoPayPeriod.end}` : "d"}</p>
-//                 <table className="bg-gray-50 w-full border-2 border-gray-200 mb-10">
-//                     <thead className="bg-gray-200">
-//                         <tr>
-//                             <th className="py-3">Student</th>
-//                             <th>Attendance</th>
-//                             <th>Duration</th>
-//                             <th>Status</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody id="week1">
-//                         {rachelStudents?.map((student, index) => (
-//                             <StudentItem key={index} student={student} attendance={student.attendance?.week1} handleAttendance={handleAttendance}/>
-//                         ))}
-//                     </tbody>
-//                 </table>
-//                 <textarea rows="4" className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here. This could include things like makeup lessons, teacher meetings, etc. The more detailed information, the better!" ref={weekTwoNotesRef}/>
-//                 <div className="text-center">
-//                 <button className={`py-3 px-4 rounded mx-auto ${weekTwoAttendanceCompleted && "bg-green-200"}`} disabled={!weekTwoAttendanceCompleted}>Submit Week 2 Attendance</button>
-//                 </div>
-//             </form>
-//         </div>
-      
-//       <ToastContainer
-//         position="top-center"
-//       />
-// </>
+    </>
   )
 }
 

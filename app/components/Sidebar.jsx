@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export const Sidebar = () => {
   return (
-    <div className="h-auto w-[200px] bg-gray-200 pt-12 px-6 flex-shrink-0 md:flex-shrink hidden md:block">
+    <div className="min-h-[calc(100vh-64px)] w-[200px] bg-gray-200 pt-12 px-6 flex-shrink-0 hidden md:block">
         <ul>
             <li className="mb-6 h-12 rounded overflow-hidden">
                 <Link href="/heather" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Heather</Link>
