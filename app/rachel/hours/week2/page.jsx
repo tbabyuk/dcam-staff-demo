@@ -10,6 +10,7 @@ import Link from "next/link"
 import { StudentItem } from "@components/app/components/StudentItem";
 import { FiArrowLeft } from "react-icons/fi"
 import { useRouter } from "next/navigation";
+import { usePayday } from "@components/hooks/usePayday";
 
 
 
@@ -18,45 +19,11 @@ export const RachelHoursWeekTwo = () => {
   const weekTwoNotesRef = useRef()
   const router = useRouter()
 
-  const [closestPayDay, setClosestPayDay] = useState(null)
-  const [payPeriodIsSelected, setPayPeriodIsSelected] = useState(false)
-  const [weekTwoPayPeriod, setWeekTwoPayPeriod] = useState({})
   const [rachelStudents, setRachelStudents] = useState(null)
   const [weekTwoAttendance, setWeekTwoAttendance] = useState({})
   const [weekTwoAttendanceCompleted, setWeekTwoAttendanceCompleted] = useState(false)
 
-
-
-  // get date of closest pay period
-  const getClosestPayPeriod = () => {
-
-    const payDays2023 = ["July 21, 2023", "August 4, 2023", "August 18, 2023", "September 1, 2023", "September 15, 2023", "September 29, 2023", "October 13, 2023", "October 27, 2023", "November 10, 2023", "November 24, 2023", "December 8, 2023", "December 22, 2023"]
-
-    const today = new Date()
-
-    let res;
-
-    for (let i = 0; i < payDays2023.length; i++) {
-      if(new Date(payDays2023[i]) > today) {
-        res = payDays2023[i]
-        break;
-      }
-    }
-    if(res) {
-      setClosestPayDay(res)
-      handlePayPeriod(new Date(res))
-    }
-  }
-
-  const handlePayPeriod = (payDay) => {
-
-    // week 2 dates
-    const weekTwoStartDate = sub(payDay, {days: 11})
-    const weekTwoStartDateFormatted = format(weekTwoStartDate, "MMMM d, yyy")
-    const weekTwoEndDate = sub(payDay, {days: 5 })
-    const weekTwoEndDateFormatted = format(weekTwoEndDate, "MMMM d, yyy")
-    setWeekTwoPayPeriod({start: weekTwoStartDateFormatted, end: weekTwoEndDateFormatted }) 
-  }
+  const {closestPayday, getClosestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
 
 
 
@@ -102,7 +69,7 @@ export const RachelHoursWeekTwo = () => {
         await batch.commit()
         await setDoc(notesDocRef, notesObject, {merge: true})
         console.log("success!")
-        toast.success("week 2 attendance successfully saved!")
+        toast.success("Week 2 attendance submitted successfully!")
         setTimeout(() => {
           router.push("/success")
         }, 2000)
@@ -115,7 +82,8 @@ export const RachelHoursWeekTwo = () => {
   // if attendance has not beeen submitted yet, get student data for the page
   const fetchData = async () => {
 
-    getClosestPayPeriod()
+    getClosestPayday()
+    getWeekTwoPayPeriod()
 
       // fetch Rachel student info upon first render
       const studentsColRef = collection(db, "rachel-students")
@@ -135,13 +103,8 @@ export const RachelHoursWeekTwo = () => {
       const snapshot = await getDocs(metaColRef)
   
       snapshot.forEach((doc) => {
-        if(doc.data().week1AttendanceSubmitted && doc.data().week2AttendanceSubmitted) {
+        if(doc.data().week2AttendanceSubmitted) {
             router.push("/success")
-        } else if (!doc.data().week1AttendanceSubmitted) {
-            toast.error("Please submit week 1 attendance before moving on to week 2. Redirecting...")
-            setTimeout(() => {
-              router.push("/rachel/hours/week1")
-            }, 2000)
         } else {
             fetchData()
         }
@@ -153,15 +116,17 @@ export const RachelHoursWeekTwo = () => {
   }, [])
 
 
-
-
   useEffect(() => {
 
     if(rachelStudents?.length === Object.keys(weekTwoAttendance).length) {
       setWeekTwoAttendanceCompleted(true)
     }
 
-  }, [weekTwoAttendance] )
+  }, [weekTwoAttendance])
+
+  useEffect(() => {
+    getWeekTwoPayPeriod()
+  }, [closestPayday])
 
 
 
@@ -170,7 +135,7 @@ export const RachelHoursWeekTwo = () => {
         <div className="flex flex-col w-full max-w-[100%]">
             <div className="page-header px-3 md:px-6 h-20 bg-gray-300 flex justify-between items-center col-span-2">
                 <Link href="/rachel/hours/week1"><button className="dcam-btn-rounded flex items-center"><FiArrowLeft className="inline-block me-1" />Week 1</button></Link>
-                <h2 className="me-4 text-center">Your next pay day is: <br /> <span className="font-semibold">{closestPayDay && closestPayDay}</span></h2>
+                <h2 className="me-4 text-center">Your next pay day is: <br /> <span className="font-semibold">{closestPayday && closestPayday}</span></h2>
                 <button></button>
             </div>
 

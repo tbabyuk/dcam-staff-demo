@@ -26,14 +26,14 @@ const SuccessPage = () => {
 
             snapshot.forEach((doc) => {
                 if(doc.data().week1AttendanceSubmitted && doc.data().week2AttendanceSubmitted) {
-                    setAttendanceCompleted(`Your attendance for ${payDay} payday has been submitted!`)
-                } else if (doc.data().week1AttendanceSubmitted) {
-                    setAttendanceNotCompleted(`You still need to submit your week 2 attendance for the ${payDay} payday. Redirecting...`)
+                    setAttendanceCompleted(`Your attendance for ${payDay} payday has been submitted! Thanks Rachel!`)
+                } else if (!doc.data().week1AttendanceSubmitted) {
+                    setAttendanceNotCompleted(`You still need to submit your week 1 attendance for the ${payDay} payday! Redirecting...`)
                     setTimeout(() => {
-                        router.push("/rachel/hours/week2")
+                        router.push("/rachel/hours/week1")
                       }, 2000)
-                } else {
-                    setAttendanceNotCompleted(`Your attendance for ${payDay} has not been submitted yet! Redirecting...`)
+                } else if(!doc.data().week2AttendanceSubmitted){
+                    setAttendanceNotCompleted(`You still need to submit your week 2 attendance for the ${payDay} payday! Redirecting...`)
                     setTimeout(() => {
                         router.push("/rachel/hours/week2")
                       }, 2000)

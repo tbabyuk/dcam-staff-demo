@@ -10,8 +10,7 @@ import Link from "next/link"
 import { StudentItem } from "@components/app/components/StudentItem";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi"
 import { useRouter } from "next/navigation";
-
-
+import { usePayday } from "@components/hooks/usePayday";
 
 
 export const RachelHoursWeekOne = () => {
@@ -19,46 +18,11 @@ export const RachelHoursWeekOne = () => {
   const weekOneNotesRef = useRef()
   const router = useRouter()
 
-  const [closestPayDay, setClosestPayDay] = useState(null)
-  const [payPeriodIsSelected, setPayPeriodIsSelected] = useState(false)
-  const [weekOnePayPeriod, setWeekOnePayPeriod] = useState({})
   const [rachelStudents, setRachelStudents] = useState(null)
   const [weekOneAttendance, setWeekOneAttendance] = useState({})
   const [weekOneAttendanceCompleted, setWeekOneAttendanceCompleted] = useState(false)
 
-
-
-  // get date of closest pay period
-  const getClosestPayPeriod = () => {
-
-    const payDays2023 = ["July 21, 2023", "August 4, 2023", "August 18, 2023", "September 1, 2023", "September 15, 2023", "September 29, 2023", "October 13, 2023", "October 27, 2023", "November 10, 2023", "November 24, 2023", "December 8, 2023", "December 22, 2023"]
-
-    const today = new Date()
-
-    let res;
-
-    for (let i = 0; i < payDays2023.length; i++) {
-      if(new Date(payDays2023[i]) > today) {
-        res = payDays2023[i]
-        break;
-      }
-    }
-    if(res) {
-      setClosestPayDay(res)
-      handlePayPeriod(new Date(res))
-    }
-  }
-
-  // get start and end dates of week 1 pay period
-  const handlePayPeriod = (payDay) => {
-
-    // week 1 dates
-    const weekOneStartDate = sub(payDay, {days: 18})
-    const weekOneStartDateFormatted = format(weekOneStartDate, "MMMM d, yyy")
-    const weekOneEndDate = sub(payDay, {days: 12 })
-    const weekOneEndDateFormatted = format(weekOneEndDate, "MMMM d, yyy")
-    setWeekOnePayPeriod({start: weekOneStartDateFormatted, end: weekOneEndDateFormatted })
-  }
+  const {closestPayday, getClosestPayday, weekOnePayPeriod, getWeekOnePayPeriod} = usePayday()
 
 
 
@@ -104,7 +68,10 @@ export const RachelHoursWeekOne = () => {
         await batch.commit()
         await setDoc(notesDocRef, notesObject)
         console.log("success!")
-        toast.success("week 1 attendance successfully saved!")
+        toast.success("Week 1 attendance submitted successfully!")
+        setTimeout(() => {
+          router.push("/rachel/hours/week2")
+        }, 2000)
     } catch(error) {
         console.log(error.message)
         toast.error("ooops, it looks like something went wrong! Please ask Terry for help!")
@@ -114,7 +81,7 @@ export const RachelHoursWeekOne = () => {
   // if attendance has not beeen submitted yet, get student data for the page
   const fetchData = async () => {
 
-    getClosestPayPeriod()
+      getClosestPayday()
 
       // fetch Rachel student info upon first render
       const studentsColRef = collection(db, "rachel-students")
@@ -160,7 +127,12 @@ export const RachelHoursWeekOne = () => {
       setWeekOneAttendanceCompleted(true)
     }
 
-  }, [weekOneAttendance] )
+  }, [weekOneAttendance])
+
+
+  useEffect(() => {
+    getWeekOnePayPeriod()
+  }, [closestPayday])
 
 
 
@@ -169,7 +141,7 @@ export const RachelHoursWeekOne = () => {
         <div className="flex flex-col w-full max-w-[100%]">
             <div className="page-header px-3 md:px-6 h-20 bg-gray-300 flex justify-between items-center col-span-2">
                 <Link href="/rachel"><button className="dcam-btn-rounded flex items-center"><FiArrowLeft className="inline-block me-1" />Main Page</button></Link>
-                <h2 className="me-4 text-center">Your next pay day is: <br /> <span className="font-semibold">{closestPayDay && closestPayDay}</span></h2>
+                <h2 className="me-4 text-center">Your next pay day is: <br /> <span className="font-semibold">{closestPayday && closestPayday}</span></h2>
                 <Link href="/rachel/hours/week2"><button className="dcam-btn-rounded flex items-center">Week 2<FiArrowRight className="inline-block ms-1" /></button></Link>
             </div>
 
