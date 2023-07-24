@@ -6,13 +6,13 @@ import ConfettiExplosion from "react-confetti-explosion"
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus"
 
 
-const SuccessPage = () => {
+const SenyaSuccessPage = () => {
 
     const {checkFinalAttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
 
 
     useEffect(() => {
-        checkFinalAttendanceStatus("rachel")
+        checkFinalAttendanceStatus("senya")
     }, [])
 
 
@@ -34,5 +34,5 @@ const SuccessPage = () => {
     )    
 }
 
-export default SuccessPage
+export default SenyaSuccessPage
 

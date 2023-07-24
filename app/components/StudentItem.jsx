@@ -13,11 +13,6 @@ export const StudentItem = ({student, handleAttendance}) => {
   const [isPresent, setIsPresent] = useState(null)
 
 
-  console.log(takeAttendance)
-
-//   console.log(studentAttendance)
-
-
 
   const setIcon = () => {
     if(isPresent === true) {
