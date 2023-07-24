@@ -8,6 +8,10 @@
     @apply bg-orange-300
 }
 
+.dcam-btn-active {
+    @apply bg-green-600
+}
+
 .dcam-btn-inactive {
     @apply bg-gray-400
 }

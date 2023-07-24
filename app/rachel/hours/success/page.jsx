@@ -1,10 +1,8 @@
+
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import ConfettiExplosion from "react-confetti-explosion"
-import { db } from "@components/firebase/config"
-import { collection, getDocs } from "firebase/firestore"
-import { useRouter } from "next/navigation";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus"
 
 

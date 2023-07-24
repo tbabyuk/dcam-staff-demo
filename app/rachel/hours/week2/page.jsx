@@ -5,25 +5,25 @@ import { collection, getDocs, doc, writeBatch, setDoc } from "firebase/firestore
 import { db } from "@components/firebase/config"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {sub, format} from "date-fns"
 import Link from "next/link"
 import { StudentItem } from "@components/app/components/StudentItem";
 import { FiArrowLeft } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 import { usePayday } from "@components/hooks/usePayday";
-
+import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
 
 
 export const RachelHoursWeekTwo = () => {
+
   const notify = () => toast("Wow so easy!");
   const weekTwoNotesRef = useRef()
   const router = useRouter()
 
+  const {closestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
+  const {checkWeek2AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
   const [rachelStudents, setRachelStudents] = useState(null)
   const [weekTwoAttendance, setWeekTwoAttendance] = useState({})
   const [weekTwoAttendanceCompleted, setWeekTwoAttendanceCompleted] = useState(false)
-
-  const {closestPayday, getClosestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
 
 
 
@@ -36,7 +36,7 @@ export const RachelHoursWeekTwo = () => {
           "attendance.week2": {
                   present: JSON.parse(e.target.value)
            },
-          "payday": closestPayDay,
+          "payday": closestPayday,
           "submitted": true
         }
     }))
@@ -58,21 +58,21 @@ export const RachelHoursWeekTwo = () => {
       batch.update(studentDocRef, attendanceData);
     });
 
-      const notesDocRef = doc(db, "meta-data", "rachel")
-      const notesObject = {
-        payday: closestPayDay,
+      const metaDocRef = doc(db, "meta-data", "rachel")
+      const metaObject = {
+        payday: closestPayday,
         week2AttendanceSubmitted: true,
         week2Notes: weekTwoNotesRef.current.value
       }
 
     try {
         await batch.commit()
-        await setDoc(notesDocRef, notesObject, {merge: true})
+        await setDoc(metaDocRef, metaObject, {merge: true})
         console.log("success!")
         toast.success("Week 2 attendance submitted successfully!")
         setTimeout(() => {
-          router.push("/success")
-        }, 2000)
+          router.push("/rachel/hours/success")
+        }, 3000)
     } catch(error) {
         console.log(error.message)
         toast.error("ooops, it looks like something went wrong! Please ask Terry for help!")
@@ -82,7 +82,6 @@ export const RachelHoursWeekTwo = () => {
   // if attendance has not beeen submitted yet, get student data for the page
   const fetchData = async () => {
 
-    getClosestPayday()
     getWeekTwoPayPeriod()
 
       // fetch Rachel student info upon first render
@@ -94,27 +93,6 @@ export const RachelHoursWeekTwo = () => {
       setRachelStudents([...studentArray])
   }
 
-  useEffect(() => {
-
-    // check if attendance for week 1 has already been submitted
-    const metaColRef = collection(db, "meta-data")
-
-    const fetchDocs = async () => {
-      const snapshot = await getDocs(metaColRef)
-  
-      snapshot.forEach((doc) => {
-        if(doc.data().week2AttendanceSubmitted) {
-            router.push("/success")
-        } else {
-            fetchData()
-        }
-      })
-    }
-
-    fetchDocs()
-
-  }, [])
-
 
   useEffect(() => {
 
@@ -124,9 +102,19 @@ export const RachelHoursWeekTwo = () => {
 
   }, [weekTwoAttendance])
 
+
   useEffect(() => {
+    checkWeek2AttendanceStatus()
+    fetchData()
     getWeekTwoPayPeriod()
   }, [closestPayday])
+
+
+  useEffect(() => {
+    if(warningMessage) {
+      toast.error(warningMessage)
+    }
+  }, [warningMessage])
 
 
 
@@ -159,7 +147,7 @@ export const RachelHoursWeekTwo = () => {
                 </table>
                 <textarea rows="4" className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here. This could include things like makeup lessons, teacher meetings, etc. The more detailed information, the better!" ref={weekTwoNotesRef}/>
                 <div className="text-center">
-                <button className={`py-3 px-4 rounded mx-auto dcam-btn-inactive text-white ${weekTwoAttendanceCompleted && "bg-green-200"}`} /*disabled={!weekTwoAttendanceCompleted}*/>Submit Week 2 Attendance</button>
+                <button className={`py-3 px-4 rounded mx-auto ${!weekTwoAttendanceCompleted ? "dcam-btn-inactive" : "dcam-btn-active"} text-white ${weekTwoAttendanceCompleted && "bg-green-200"}`} disabled={!weekTwoAttendanceCompleted}>Submit Week 2 Attendance</button>
                 </div>
             </form>
         </div>

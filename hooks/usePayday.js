@@ -1,7 +1,7 @@
 "use client"
 
 import {sub, format} from "date-fns"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 
 export const usePayday = () => {
@@ -51,7 +51,11 @@ export const usePayday = () => {
           setClosestPayday(res)
         }
       }
+
+      useEffect(() => {
+        getClosestPayday()
+      }, [])
     
 
-  return {closestPayday, getClosestPayday, weekOnePayPeriod, getWeekOnePayPeriod, weekTwoPayPeriod, getWeekTwoPayPeriod }
+  return {closestPayday, weekOnePayPeriod, getWeekOnePayPeriod, weekTwoPayPeriod, getWeekTwoPayPeriod }
 }
