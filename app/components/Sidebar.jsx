@@ -12,6 +12,9 @@ export const Sidebar = () => {
                 <Link href="/rachel" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Rachel</Link>
             </li>
             <li className="mb-6 h-12 rounded overflow-hidden">
+                <Link href="/jonathan" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Jonathan</Link>
+            </li>
+            <li className="mb-6 h-12 rounded overflow-hidden">
                 <Link href="/raul" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Raul</Link>
             </li>
             <li className="mb-6 h-12 rounded overflow-hidden">
