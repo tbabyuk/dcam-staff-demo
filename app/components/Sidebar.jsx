@@ -2,30 +2,19 @@
 import Link from "next/link"
 
 export const Sidebar = () => {
+
+  const teachersArray = ["jonathan", "rachel", "raul", "senya", "taisiya", "tiago"]  
+
+
   return (
-    <div className="min-h-[calc(100vh-64px)] w-[200px] bg-gray-200 pt-12 px-6 flex-shrink-0 hidden md:block">
+    <div className="min-h-[calc(100vh-64px)] w-[200px] bg-gradient-to-r from-[#185281] via-[#103756] to-[#103756] pt-32 px-6 flex-shrink-0 hidden md:block">
         <ul>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/heather" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Heather</Link>
-            </li>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/rachel" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Rachel</Link>
-            </li>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/jonathan" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Jonathan</Link>
-            </li>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/raul" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Raul</Link>
-            </li>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/senya" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Senya</Link>
-            </li>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/taisiya" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Taisiya</Link>
-            </li>
-            <li className="mb-6 h-12 rounded overflow-hidden">
-                <Link href="/tiago" className="bg-blue-300 grid h-full place-items-center cursor-pointer hover:bg-blue-500">Tiago</Link>
-            </li>
+
+            {teachersArray.map((teacher) => (
+                <li className="mb-6 h-12 rounded overflow-hidden">
+                    <Link href={`/${teacher}`} className="bg-[#216dab] text-white grid h-full place-items-center cursor-pointer hover:bg-[#185281]">{teacher[0].toUpperCase() + teacher.slice(1)}</Link>
+                </li>
+            ))}
         </ul>
     </div>
   )

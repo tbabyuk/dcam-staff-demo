@@ -1,8 +1,7 @@
-import { collection, getDocs, doc, getDoc } from "firebase/firestore"
+import { collection, doc, getDoc } from "firebase/firestore"
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { db } from "@components/firebase/config";
-import { FiSmile } from "react-icons/fi";
 
 
 
@@ -20,9 +19,13 @@ export const useAttendanceStatus = () => {
     // check attendance status for week 1
     const checkWeek1AttendanceStatus = async (teacher) => {
 
+        console.log("see teacher name:", teacher)
+
         const docRef = doc(metaColRef, teacher)
 
         const docSnap = await getDoc(docRef)
+
+        console.log("week1RaulAttendance:", docSnap.data().week1AttendanceSubmitted)
 
         if(docSnap.data().week1AttendanceSubmitted && docSnap.data().week2AttendanceSubmitted ) {
             router.push(`/${teacher}/hours/success`)

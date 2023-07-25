@@ -13,7 +13,7 @@ import { usePayday } from "@components/hooks/usePayday";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
 
 
-export const RachelHoursWeekTwo = () => {
+export const TaisiyaHoursWeekTwo = () => {
 
   const notify = () => toast("Wow so easy!");
   const weekTwoNotesRef = useRef()
@@ -21,7 +21,7 @@ export const RachelHoursWeekTwo = () => {
 
   const {closestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
   const {checkWeek2AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
-  const [rachelStudents, setRachelStudents] = useState(null)
+  const [taisiyaStudents, setTaisiyaStudents] = useState(null)
   const [weekTwoAttendance, setWeekTwoAttendance] = useState({})
   const [weekTwoAttendanceCompleted, setWeekTwoAttendanceCompleted] = useState(false)
 
@@ -54,11 +54,11 @@ export const RachelHoursWeekTwo = () => {
 
       console.log("object keys:", studentName)
       const attendanceData = weekTwoAttendance[studentName];
-      const studentDocRef = doc(db, 'rachel-students', studentName.toLowerCase());
+      const studentDocRef = doc(db, 'taisiya-students', studentName.toLowerCase());
       batch.update(studentDocRef, attendanceData);
     });
 
-      const metaDocRef = doc(db, "meta-data", "rachel")
+      const metaDocRef = doc(db, "meta-data", "taisiya")
       const metaObject = {
         payday: closestPayday,
         week2AttendanceSubmitted: true,
@@ -71,7 +71,7 @@ export const RachelHoursWeekTwo = () => {
         console.log("success!")
         toast.success("Week 2 attendance submitted successfully!")
         setTimeout(() => {
-          router.push("/rachel/hours/success")
+          router.push("/taisiya/hours/success")
         }, 3000)
     } catch(error) {
         console.log(error.message)
@@ -84,19 +84,19 @@ export const RachelHoursWeekTwo = () => {
 
     getWeekTwoPayPeriod()
 
-      // fetch Rachel student info upon first render
-      const studentsColRef = collection(db, "rachel-students")
+      // fetch Taisiya student info upon first render
+      const studentsColRef = collection(db, "taisiya-students")
 
       const studentArray = []
       const snapshot = await getDocs(studentsColRef)
       snapshot.forEach((doc) => studentArray.push(doc.data()))
-      setRachelStudents([...studentArray])
+      setTaisiyaStudents([...studentArray])
   }
 
 
   useEffect(() => {
 
-    if(rachelStudents?.length === Object.keys(weekTwoAttendance).length) {
+    if(taisiyaStudents?.length === Object.keys(weekTwoAttendance).length) {
       setWeekTwoAttendanceCompleted(true)
     }
 
@@ -104,7 +104,7 @@ export const RachelHoursWeekTwo = () => {
 
 
   useEffect(() => {
-    checkWeek2AttendanceStatus("rachel")
+    checkWeek2AttendanceStatus("taisiya")
     fetchData()
     getWeekTwoPayPeriod()
   }, [closestPayday])
@@ -122,7 +122,7 @@ export const RachelHoursWeekTwo = () => {
     <>
         <div className="flex flex-col w-full max-w-[100%]">
             <div className="page-header px-3 md:px-6 h-20 bg-gray-300 flex justify-between items-center col-span-2">
-                <Link href="/rachel/hours/week1"><button className="dcam-btn-rounded flex items-center"><FiArrowLeft className="inline-block me-1" />Week 1</button></Link>
+                <Link href="/taisiya/hours/week1"><button className="dcam-btn-rounded flex items-center"><FiArrowLeft className="inline-block me-1" />Week 1</button></Link>
                 <h2 className="me-4 text-center">Your next pay day is: <br /> <span className="font-semibold">{closestPayday && closestPayday}</span></h2>
                 <button></button>
             </div>
@@ -140,14 +140,14 @@ export const RachelHoursWeekTwo = () => {
                         </tr>
                     </thead>
                     <tbody id="week2">
-                        {rachelStudents?.map((student, index) => (
+                        {taisiyaStudents?.map((student, index) => (
                             <StudentItem key={index} student={student} handleAttendance={handleAttendance}/>
                         ))}
                     </tbody>
                 </table>
                 <textarea rows="4" className="w-full p-2 mb-8 bg-gray-100" placeholder="Enter any notes you might have pertaining to the attendance here. This could include things like makeup lessons, teacher meetings, etc. The more detailed information, the better!" ref={weekTwoNotesRef}/>
                 <div className="text-center">
-                <button className={`py-3 px-4 rounded mx-auto ${!weekTwoAttendanceCompleted ? "dcam-btn-inactive" : "dcam-btn-active"} text-white ${weekTwoAttendanceCompleted && "bg-green-200"}`} disabled={!weekTwoAttendanceCompleted}>Submit Week 2 Attendance</button>
+                <button className={`py-3 px-4 rounded mx-auto ${!weekTwoAttendanceCompleted ? "dcam-btn-inactive" : "dcam-btn-active"} text-white ${weekTwoAttendanceCompleted && "bg-green-200"}`} /*disabled={!weekTwoAttendanceCompleted}*/>Submit Week 2 Attendance</button>
                 </div>
             </form>
         </div>
@@ -159,4 +159,4 @@ export const RachelHoursWeekTwo = () => {
   )
 }
 
-export default RachelHoursWeekTwo
+export default TaisiyaHoursWeekTwo
