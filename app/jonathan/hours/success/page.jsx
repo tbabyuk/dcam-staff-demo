@@ -18,7 +18,7 @@ const JonathanSuccessPage = () => {
 
     return (
         <>
-            <div className="flex flex-col w-full justify-center items-center bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
+            <div className="flex flex-col w-full h-[calc(100vh-64px)] md:ms-[200px] justify-center items-center bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
                 {successMessage && (
                     <>
                         <ConfettiExplosion />

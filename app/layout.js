@@ -1,6 +1,8 @@
 import './globals.css'
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
+import { AuthContextProvider } from '@components/context/AuthContext'
+
 
 export const metadata = {
   title: 'Create Next App',
@@ -10,13 +12,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          {children}
-        </div>
-      </body>
-    </html>
+          <body>
+            <AuthContextProvider>
+              <Header />
+              <div className="flex">
+                    <Sidebar />
+                    {children}
+              </div>
+            </AuthContextProvider>
+          </body>
+      </html>
   )
 }
