@@ -6,7 +6,7 @@ import ConfettiExplosion from "react-confetti-explosion"
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus"
 
 
-const SuccessPage = () => {
+const RachelSuccessPage = () => {
 
     const {checkFinalAttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
 
@@ -18,7 +18,7 @@ const SuccessPage = () => {
 
     return (
         <>
-            <div className="flex flex-col w-full justify-center items-center">
+            <div className="flex flex-col w-full justify-center items-center bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
                 {successMessage && (
                     <>
                         <ConfettiExplosion />
@@ -34,5 +34,5 @@ const SuccessPage = () => {
     )    
 }
 
-export default SuccessPage
+export default RachelSuccessPage
 

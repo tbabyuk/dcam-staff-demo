@@ -115,7 +115,7 @@ export const SenyaHoursWeekOne = () => {
 
   return (
     <>
-        <div className="flex flex-col w-full max-w-[100%]">
+        <div className="flex flex-col w-full max-w-[100%] bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
             <div className="page-header px-3 md:px-6 h-20 bg-gray-300 flex justify-between items-center col-span-2">
                 <Link href="/senya"><button className="dcam-btn-rounded flex items-center"><FiArrowLeft className="inline-block me-1" />Main Page</button></Link>
                 <h2 className="me-4 text-center">Your next pay day is: <br /> <span className="font-semibold">{closestPayday && closestPayday}</span></h2>
