@@ -11,13 +11,15 @@ import { FiArrowLeft } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 import { usePayday } from "@components/hooks/usePayday";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
+import { useAuthContext } from "@components/context/AuthContext";
 
 
 export const JonathanHoursWeekTwo = () => {
 
+  const router = useRouter()
+  const {currentUser} = useAuthContext()
   const notify = () => toast("Wow so easy!");
   const weekTwoNotesRef = useRef()
-  const router = useRouter()
 
   const {closestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
   const {checkWeek2AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
@@ -117,6 +119,7 @@ export const JonathanHoursWeekTwo = () => {
   }, [warningMessage])
 
 
+  if(currentUser && currentUser.uid === "NkKiAR3ilWNxyaXWc8wvCmChFEA3") {
 
   return (
     <>
@@ -156,7 +159,9 @@ export const JonathanHoursWeekTwo = () => {
         position="top-center"
       />
     </>
-  )
+  ) } else {
+      router.push("/")
+  }
 }
 
 export default JonathanHoursWeekTwo

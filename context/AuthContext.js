@@ -71,6 +71,7 @@ export const AuthContextProvider = ({children}) => {
         console.log("onAuthStateChanged fired...", user)
         if(user) {
             setCurrentUser(user)
+            console.log("see current user:", user.uid)
         } else {
             setCurrentUser(null)
         }
