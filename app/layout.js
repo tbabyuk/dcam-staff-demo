@@ -15,10 +15,7 @@ export default function RootLayout({ children }) {
           <body>
             <AuthContextProvider>
               <Header />
-              <div className="flex">
-                    <Sidebar />
-                    {children}
-              </div>
+              {children}
             </AuthContextProvider>
           </body>
       </html>
