@@ -23,8 +23,8 @@ export default function Home() {
   const handleLogin = async (e) => {
       e.preventDefault()
 
-      const username = usernameRef.current.value
-      const password = passwordRef.current.value
+      const username = usernameRef.current.value.trim()
+      const password = passwordRef.current.value.trim()
 
       logIn(username, password)
 

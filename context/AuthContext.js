@@ -4,7 +4,7 @@
 import { createContext } from "react";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { auth } from "@components/firebase/config";
 import { useRouter } from "next/navigation";
 
@@ -22,6 +22,9 @@ export const AuthContextProvider = ({children}) => {
   const logIn = async (email, password) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
+
+        console.log("displayName added")
+
         switch(userCredential.user.uid) {
           case "NkKiAR3ilWNxyaXWc8wvCmChFEA3": {
             router.push("/jonathan")
