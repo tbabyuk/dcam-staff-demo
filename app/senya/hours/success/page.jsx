@@ -4,16 +4,29 @@
 import { useEffect } from "react"
 import ConfettiExplosion from "react-confetti-explosion"
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus"
+import { useAuthContext } from "@components/context/AuthContext"
+import { useRouter } from "next/navigation";
 
 
 const SenyaSuccessPage = () => {
 
+    const router = useRouter()
     const {checkFinalAttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
+    const {currentUser, authIsReady} = useAuthContext()
 
 
     useEffect(() => {
-        checkFinalAttendanceStatus("senya")
-    }, [])
+        if (!authIsReady) {
+          // if authIsReady is false, the authentication process is still in progress, so don't redirect
+          return;
+        }
+        if(!currentUser || currentUser.uid !== "N1KeYAkh19hlzLmhz6UtdQuQwzY2") {
+          router.push("/")
+        } else {
+          console.log("check attendance block fired")
+          checkFinalAttendanceStatus("senya")
+        }
+    }, [authIsReady])
 
 
     return (

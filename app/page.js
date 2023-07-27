@@ -30,6 +30,11 @@ export default function Home() {
 
     }
 
+  useEffect(() => {
+    console.log("page useEffect fired")
+    currentUser && currentUser.displayName && router.push(`/${currentUser.displayName.toLowerCase()}`)
+  }, [currentUser])
+
 
   return (
     <main className={`flex flex-col lg:flex-row min-h-[calc(100vh-64px)] ${fade && "fade-out"}`}>

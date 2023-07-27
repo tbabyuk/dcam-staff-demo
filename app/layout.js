@@ -1,8 +1,10 @@
+"use client"
+
+
 import './globals.css'
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
 import { AuthContextProvider } from '@components/context/AuthContext'
-
 
 export const metadata = {
   title: 'Create Next App',
@@ -10,14 +12,17 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+
+
+
   return (
     <html lang="en">
+      <AuthContextProvider>
           <body>
-            <AuthContextProvider>
               <Header />
               {children}
-            </AuthContextProvider>
           </body>
-      </html>
+      </AuthContextProvider>
+    </html>
   )
 }

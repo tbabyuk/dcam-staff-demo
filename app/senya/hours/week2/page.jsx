@@ -11,6 +11,7 @@ import { FiArrowLeft } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 import { usePayday } from "@components/hooks/usePayday";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
+import { useAuthContext } from "@components/context/AuthContext";
 
 
 export const SenyaHoursWeekTwo = () => {
@@ -18,6 +19,7 @@ export const SenyaHoursWeekTwo = () => {
   const notify = () => toast("Wow so easy!");
   const weekTwoNotesRef = useRef()
   const router = useRouter()
+  const {currentUser, authIsReady} = useAuthContext()
 
   const {closestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
   const {checkWeek2AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
@@ -95,16 +97,27 @@ export const SenyaHoursWeekTwo = () => {
 
 
   useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "N1KeYAkh19hlzLmhz6UtdQuQwzY2") {
+      router.push("/")
+    } else {
+      console.log("check attendance block fired")
+      checkWeek2AttendanceStatus("senya")
+    }
+  }, [authIsReady])
 
+
+  useEffect(() => {
     if(senyaStudents?.length === Object.keys(weekTwoAttendance).length) {
       setWeekTwoAttendanceCompleted(true)
     }
-
   }, [weekTwoAttendance])
 
 
   useEffect(() => {
-    checkWeek2AttendanceStatus("senya")
     fetchData()
     getWeekTwoPayPeriod()
   }, [closestPayday])

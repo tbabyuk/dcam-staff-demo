@@ -1,9 +1,28 @@
-
+"use client"
 
 import Link from "next/link";
+import { useAuthContext } from "@components/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 
 
 const RachelPage = () => {
+
+  const router = useRouter()
+  const {currentUser, authIsReady} = useAuthContext()
+
+
+  useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "eybkaZdJSlXIkhQcqNXElokxGgp1") {
+      router.push("/")
+    }
+  }, [authIsReady])
+
 
     return (
       <>

@@ -16,10 +16,10 @@ import { useAuthContext } from "@components/context/AuthContext";
 
 export const JonathanHoursWeekTwo = () => {
 
-  const router = useRouter()
-  const {currentUser} = useAuthContext()
   const notify = () => toast("Wow so easy!");
   const weekTwoNotesRef = useRef()
+  const router = useRouter()
+  const {currentUser, authIsReady} = useAuthContext()
 
   const {closestPayday, weekTwoPayPeriod, getWeekTwoPayPeriod} = usePayday()
   const {checkWeek2AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
@@ -97,16 +97,27 @@ export const JonathanHoursWeekTwo = () => {
 
 
   useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "NkKiAR3ilWNxyaXWc8wvCmChFEA3") {
+      router.push("/")
+    } else {
+      console.log("check attendance block fired")
+      checkWeek2AttendanceStatus("jonathan")
+    }
+  }, [authIsReady])
 
+
+  useEffect(() => {
     if(jonathanStudents?.length === Object.keys(weekTwoAttendance).length) {
       setWeekTwoAttendanceCompleted(true)
     }
-
   }, [weekTwoAttendance])
 
 
   useEffect(() => {
-    checkWeek2AttendanceStatus("jonathan")
     fetchData()
     getWeekTwoPayPeriod()
   }, [closestPayday])
@@ -119,7 +130,6 @@ export const JonathanHoursWeekTwo = () => {
   }, [warningMessage])
 
 
-  if(currentUser && currentUser.uid === "NkKiAR3ilWNxyaXWc8wvCmChFEA3") {
 
   return (
     <>
@@ -159,9 +169,7 @@ export const JonathanHoursWeekTwo = () => {
         position="top-center"
       />
     </>
-  ) } else {
-      router.push("/")
-  }
+  )
 }
 
 export default JonathanHoursWeekTwo

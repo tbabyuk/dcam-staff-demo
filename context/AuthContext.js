@@ -17,6 +17,7 @@ export const AuthContextProvider = ({children}) => {
   const router = useRouter()
   const [job, setJob] = useState("farmer1")
   const [currentUser, setCurrentUser] = useState(null)
+  const [authIsReady, setAuthIsReady] = useState(false)
 
 
   const logIn = async (email, password) => {
@@ -74,9 +75,11 @@ export const AuthContextProvider = ({children}) => {
         console.log("onAuthStateChanged fired...", user)
         if(user) {
             setCurrentUser(user)
+            setAuthIsReady(true)
             console.log("see current user:", user.uid)
         } else {
             setCurrentUser(null)
+            setAuthIsReady(true)
         }
       })
 
@@ -88,7 +91,7 @@ export const AuthContextProvider = ({children}) => {
 
 
   return (
-    <AuthContext.Provider value={{name:"William", age: 35, job, logIn, logOut, currentUser}}>
+    <AuthContext.Provider value={{name:"William", age: 35, job, logIn, logOut, currentUser, authIsReady}}>
         {children}
     </AuthContext.Provider>
   )

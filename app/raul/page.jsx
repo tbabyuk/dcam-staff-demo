@@ -1,9 +1,28 @@
-
+"use client"
 
 import Link from "next/link";
+import { useAuthContext } from "@components/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 
 
 const RaulPage = () => {
+
+  const router = useRouter()
+  const {currentUser, authIsReady} = useAuthContext()
+
+
+  useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "WpZXrASqMkPP2rJbBoci8AFOvm52") {
+      router.push("/")
+    }
+  }, [authIsReady])
+
 
     return (
       <>

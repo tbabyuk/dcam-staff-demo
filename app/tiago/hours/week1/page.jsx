@@ -11,6 +11,7 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 import { usePayday } from "@components/hooks/usePayday";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
+import { useAuthContext } from "@components/context/AuthContext";
 
 
 export const TiagoHoursWeekOne = () => {
@@ -18,6 +19,7 @@ export const TiagoHoursWeekOne = () => {
   const notify = () => toast("Wow so easy!");
   const weekOneNotesRef = useRef()
   const router = useRouter()
+  const {currentUser, authIsReady} = useAuthContext()
 
   const {closestPayday, weekOnePayPeriod, getWeekOnePayPeriod} = usePayday()
   const {checkWeek1AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
@@ -91,6 +93,20 @@ export const TiagoHoursWeekOne = () => {
 
 
   useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "qVSZ7lBYUmNvG0n5loadRIM44fW2") {
+      router.push("/")
+    } else {
+      console.log("check attendance block fired")
+      checkWeek1AttendanceStatus("tiago")
+    }
+  }, [authIsReady])
+
+
+  useEffect(() => {
     if(tiagoStudents?.length === Object.keys(weekOneAttendance).length) {
       setWeekOneAttendanceCompleted(true)
     }
@@ -98,7 +114,6 @@ export const TiagoHoursWeekOne = () => {
 
 
   useEffect(() => {
-    checkWeek1AttendanceStatus("tiago")
     fetchData()
     getWeekOnePayPeriod()
   }, [closestPayday])

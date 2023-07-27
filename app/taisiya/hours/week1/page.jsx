@@ -11,6 +11,7 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 import { usePayday } from "@components/hooks/usePayday";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
+import { useAuthContext } from "@components/context/AuthContext";
 
 
 export const TaisiyaHoursWeekOne = () => {
@@ -18,6 +19,7 @@ export const TaisiyaHoursWeekOne = () => {
   const notify = () => toast("Wow so easy!");
   const weekOneNotesRef = useRef()
   const router = useRouter()
+  const {currentUser, authIsReady} = useAuthContext()
 
   const {closestPayday, weekOnePayPeriod, getWeekOnePayPeriod} = usePayday()
   const {checkWeek1AttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
@@ -90,6 +92,20 @@ export const TaisiyaHoursWeekOne = () => {
 
 
   useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "rF4bp8yxrNgQrY0WrNFgxv5Gmqc2") {
+      router.push("/")
+    } else {
+      console.log("check attendance block fired")
+      checkWeek1AttendanceStatus("taisiya")
+    }
+  }, [authIsReady])
+
+
+  useEffect(() => {
 
     if(taisiyaStudents?.length === Object.keys(weekOneAttendance).length) {
       setWeekOneAttendanceCompleted(true)
@@ -98,7 +114,6 @@ export const TaisiyaHoursWeekOne = () => {
 
 
   useEffect(() => {
-    checkWeek1AttendanceStatus("taisiya")
     fetchData()
     getWeekOnePayPeriod()
   }, [closestPayday])

@@ -4,21 +4,35 @@
 import { useEffect } from "react"
 import ConfettiExplosion from "react-confetti-explosion"
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus"
+import { useAuthContext } from "@components/context/AuthContext"
+import { useRouter } from "next/navigation";
 
 
 const JonathanSuccessPage = () => {
 
+    const router = useRouter()
     const {checkFinalAttendanceStatus, successMessage, warningMessage} = useAttendanceStatus()
+    const {currentUser, authIsReady} = useAuthContext()
 
 
     useEffect(() => {
-        checkFinalAttendanceStatus("jonathan")
-    }, [])
+        if (!authIsReady) {
+          // if authIsReady is false, the authentication process is still in progress, so don't redirect
+          return;
+        }
+        if(!currentUser || currentUser.uid !== "NkKiAR3ilWNxyaXWc8wvCmChFEA3") {
+          router.push("/")
+        } else {
+          console.log("check attendance block fired")
+          checkFinalAttendanceStatus("jonathan")
+        }
+    }, [authIsReady])
+
 
 
     return (
         <>
-            <div className="flex flex-col w-full h-[calc(100vh-64px)] md:ms-[200px] justify-center items-center bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
+            <div className="flex flex-col w-full h-[calc(100vh-64px)] justify-center items-center bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
                 {successMessage && (
                     <>
                         <ConfettiExplosion />

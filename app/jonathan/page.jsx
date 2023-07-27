@@ -1,20 +1,29 @@
 "use client"
 
 import Link from "next/link";
-import Router from "next/router";
 import { useAuthContext } from "@components/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 
 
 const JonathanPage = () => {
 
   const router = useRouter()
-  const {currentUser} = useAuthContext()
+  const {currentUser, authIsReady} = useAuthContext()
 
 
+  useEffect(() => {
+    if (!authIsReady) {
+      // if authIsReady is false, the authentication process is still in progress, so don't redirect
+      return;
+    }
+    if(!currentUser || currentUser.uid !== "NkKiAR3ilWNxyaXWc8wvCmChFEA3") {
+      router.push("/")
+    }
+  }, [authIsReady])
 
-  if(currentUser && currentUser.uid === "NkKiAR3ilWNxyaXWc8wvCmChFEA3") {
+  
     return (
       <>
           <main className="pt-10 px-20 w-full h-[calc(100vh-64px)] bg-[url('/images/main_bg.jpg')] bg-cover bg-center">
@@ -25,12 +34,7 @@ const JonathanPage = () => {
           </main>
       </>
     )
-  } else {
-      router.push("/")
-  }
-
-
-  }
+}
 
   
   export default JonathanPage
