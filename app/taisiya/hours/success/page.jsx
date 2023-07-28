@@ -4,7 +4,7 @@
 import { useEffect } from "react"
 import ConfettiExplosion from "react-confetti-explosion"
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus"
-import { useAuthContext } from "@components/context/AuthContext"
+import { useAuthContext } from "@components/hooks/useAuthContext"
 import { useRouter } from "next/navigation";
 
 

@@ -1,10 +1,8 @@
 "use client"
 
 import { Inter } from 'next/font/google'
-import { Header } from './components/Header'
-import { auth } from '@components/firebase/config'
 import { useState, useEffect, useRef } from 'react'
-import { useAuthContext } from '@components/context/AuthContext'
+import { useAuthContext } from "@components/hooks/useAuthContext"
 import { useRouter } from "next/navigation";
 
 
@@ -14,11 +12,10 @@ export default function Home() {
 
   const usernameRef = useRef()
   const passwordRef = useRef()
-  const {name, age, job, logIn, currentUser, logOut} = useAuthContext()
+  const {error, logIn, currentUser} = useAuthContext()
   const [fade, setFade] = useState(false)
   const router = useRouter()
 
-  console.log("logging current user in page.jsx component:", currentUser)
 
   const handleLogin = async (e) => {
       e.preventDefault()
@@ -51,6 +48,7 @@ export default function Home() {
             <input className="w-full h-8 ps-2 rounded text-gray-800" type="password" ref={passwordRef}/>
           </label>
           <button className="inline-block h-10 dcam-btn">Sign In</button>
+          <p className="h-6 text-sm text-red-600 text-center">{error && error}</p>
         </form>
       </div>
 

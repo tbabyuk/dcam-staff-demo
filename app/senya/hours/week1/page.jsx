@@ -11,7 +11,7 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 import { usePayday } from "@components/hooks/usePayday";
 import { useAttendanceStatus } from "@components/hooks/useAttendanceStatus";
-import { useAuthContext } from "@components/context/AuthContext";
+import { useAuthContext } from "@components/hooks/useAuthContext"
 
 
 export const SenyaHoursWeekOne = () => {

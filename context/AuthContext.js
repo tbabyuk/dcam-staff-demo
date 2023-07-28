@@ -15,46 +15,45 @@ export const AuthContext = createContext()
 export const AuthContextProvider = ({children}) => {
   
   const router = useRouter()
-  const [job, setJob] = useState("farmer1")
   const [currentUser, setCurrentUser] = useState(null)
   const [authIsReady, setAuthIsReady] = useState(false)
+  const [error, setError] = useState(null)
+
+
+  const routingObject = {
+    "NkKiAR3ilWNxyaXWc8wvCmChFEA3": "/jonathan",
+    "eybkaZdJSlXIkhQcqNXElokxGgp1": "/rachel",
+    "WpZXrASqMkPP2rJbBoci8AFOvm52": "/raul",
+    "N1KeYAkh19hlzLmhz6UtdQuQwzY2": "/senya",
+    "rF4bp8yxrNgQrY0WrNFgxv5Gmqc2": "/taisiya",
+    "qVSZ7lBYUmNvG0n5loadRIM44fW2": "/tiago"
+  }
 
 
   const logIn = async (email, password) => {
     try {
+        setError(null)
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
 
         console.log("displayName added")
 
-        switch(userCredential.user.uid) {
-          case "NkKiAR3ilWNxyaXWc8wvCmChFEA3": {
-            router.push("/jonathan")
-            break;
-          }
-          case "eybkaZdJSlXIkhQcqNXElokxGgp1": {
-            router.push("/rachel")
-            break;
-          }
-          case "WpZXrASqMkPP2rJbBoci8AFOvm52": {
-            router.push("/raul")
-            break;
-          }
-          case "N1KeYAkh19hlzLmhz6UtdQuQwzY2": {
-            router.push("/senya")
-            break;
-          }
-          case "rF4bp8yxrNgQrY0WrNFgxv5Gmqc2": {
-            router.push("/taisiya")
-            break;
-          }
-          case "qVSZ7lBYUmNvG0n5loadRIM44fW2": {
-            router.push("/tiago")
-            break;
-          }
-        }
+        const route = routingObject[userCredential.user.uid]
+
+        router.push(route)
 
     } catch(err) {
         console.log("sign in failed:", err.message)
+        let errorMessage
+        switch(err.code) {
+          case "auth/wrong-password": {
+            errorMessage = "wrong password, try again"
+            break;
+          }
+          case "auth/user-not-found": {
+            errorMessage = "email not recognized, try again"
+          }
+        }
+        setError(errorMessage)
     }
   }
 
@@ -91,12 +90,8 @@ export const AuthContextProvider = ({children}) => {
 
 
   return (
-    <AuthContext.Provider value={{name:"William", age: 35, job, logIn, logOut, currentUser, authIsReady}}>
+    <AuthContext.Provider value={{logIn, logOut, error, currentUser, authIsReady}}>
         {children}
     </AuthContext.Provider>
   )
-}
-
-export const useAuthContext = () => {
-    return useContext(AuthContext)
 }

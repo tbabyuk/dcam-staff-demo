@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuthContext } from "@components/context/AuthContext"
+import { useAuthContext } from "@components/hooks/useAuthContext"
 import Link from "next/link"
 
 export const Header = () => {
