@@ -1,9 +1,7 @@
 "use client"
 
-
 import './globals.css'
 import { Header } from './components/Header'
-import { Sidebar } from './components/Sidebar'
 import { AuthContextProvider } from '@components/context/AuthContext'
 
 export const metadata = {
@@ -12,7 +10,6 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-
 
 
   return (
