@@ -35,14 +35,18 @@ export const AuthContextProvider = ({children}) => {
         setError(null)
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
 
-        console.log("displayName added")
+        // await updateProfile(userCredential.user, {
+        //   photoURL: "https://firebasestorage.googleapis.com/v0/b/dcam-hours-worked.appspot.com/o/images%2Ftaisiya_profile.png?alt=media&token=5ea03622-d59f-4571-a158-2a8dfa28916f"
+        // })
+
+        // console.log("profilePhoto added")
 
         const route = routingObject[userCredential.user.uid]
 
         router.push(route)
 
     } catch(err) {
-        console.log("sign in failed:", err.message)
+        console.log("something went wrong:", err.message)
         let errorMessage
         switch(err.code) {
           case "auth/wrong-password": {

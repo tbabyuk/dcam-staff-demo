@@ -36,7 +36,7 @@ export default function Home() {
   return (
     <main className={`flex flex-col lg:flex-row min-h-[calc(100vh-64px)] ${fade && "fade-out"}`}>
 
-      <div className="left-side w-[100%] h-[calc(100vh-64px)] bg-dcam-dark-blue grid place-items-center">
+      <div className="left-side w-[100%] min-h-[calc(100vh-64px)] bg-[url(/images/home_bg_left.jpg)] bg-cover grid place-items-center">
         <form className="flex flex-col bg-dcam-regular-blue bg-opacity-40 text-gray-100 rounded-md w-[340px] p-10 mx-auto" onSubmit={handleLogin}>
           <h1 className="text-2xl mb-5 text-center">Staff Login</h1>
           <label className="mb-4">
