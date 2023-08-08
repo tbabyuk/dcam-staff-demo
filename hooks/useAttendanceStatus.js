@@ -25,7 +25,7 @@ export const useAttendanceStatus = () => {
 
         const docSnap = await getDoc(docRef)
 
-        console.log("week1RaulAttendance:", docSnap.data().week1AttendanceSubmitted)
+        console.log("week1Attendance:", docSnap.data().week1AttendanceSubmitted)
 
         if(docSnap.data().week1AttendanceSubmitted && docSnap.data().week2AttendanceSubmitted ) {
             router.push(`/${teacher}/hours/success`)

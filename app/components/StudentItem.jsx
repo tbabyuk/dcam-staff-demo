@@ -38,7 +38,7 @@ export const StudentItem = ({student, handleAttendance}) => {
 
 
   return (
-        <tr className="border border-gray-300">
+        <tr className="border border-gray-400 bg-gray-200">
             <td className="text-center p-3">{student.name}</td>
             <td className="text-center">
                 <select className="bg-gray-200" defaultValue={"attendance"} onChange={handleSelect}>

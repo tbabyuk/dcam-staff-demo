@@ -4,13 +4,14 @@ import {getFirestore} from "firebase/firestore"
 import {getAuth} from "firebase/auth"
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBcamKh36INoRpR98yUKNgVAAvwWwC1ZEk",
-    authDomain: "dcam-hours-worked.firebaseapp.com",
-    projectId: "dcam-hours-worked",
-    storageBucket: "dcam-hours-worked.appspot.com",
-    messagingSenderId: "758738253807",
-    appId: "1:758738253807:web:47b5cae49f74413104681a"
-  };
+  apiKey: "AIzaSyCIuBmRbYjwpQf8cky3OoVdGN4kvRJAoMU",
+  authDomain: "dcam-staff-demo.firebaseapp.com",
+  projectId: "dcam-staff-demo",
+  storageBucket: "dcam-staff-demo.appspot.com",
+  messagingSenderId: "333129012535",
+  appId: "1:333129012535:web:2fbd22f183042993fa36b2",
+  measurementId: "G-63E5EDK729"
+};
 
 
 const app = initializeApp(firebaseConfig)

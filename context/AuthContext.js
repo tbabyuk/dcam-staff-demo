@@ -21,12 +21,8 @@ export const AuthContextProvider = ({children}) => {
 
 
   const routingObject = {
-    "NkKiAR3ilWNxyaXWc8wvCmChFEA3": "/jonathan",
-    "eybkaZdJSlXIkhQcqNXElokxGgp1": "/rachel",
-    "WpZXrASqMkPP2rJbBoci8AFOvm52": "/raul",
-    "N1KeYAkh19hlzLmhz6UtdQuQwzY2": "/senya",
-    "rF4bp8yxrNgQrY0WrNFgxv5Gmqc2": "/taisiya",
-    "qVSZ7lBYUmNvG0n5loadRIM44fW2": "/tiago"
+    "tULsJxwXKQcxf8L4nnmK2oRLViD2": "/diego"
+
   }
 
 
@@ -36,10 +32,9 @@ export const AuthContextProvider = ({children}) => {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
 
         // await updateProfile(userCredential.user, {
-        //   photoURL: "https://firebasestorage.googleapis.com/v0/b/dcam-hours-worked.appspot.com/o/images%2Ftaisiya_profile.png?alt=media&token=5ea03622-d59f-4571-a158-2a8dfa28916f"
+        //   photoURL: "https://firebasestorage.googleapis.com/v0/b/dcam-staff-demo.appspot.com/o/images%2Ffemale.jpg?alt=media&token=f7505d62-189c-42bd-b461-8e7beefa453b",
+        //   displayName: "Paula"
         // })
-
-        // console.log("profilePhoto added")
 
         const route = routingObject[userCredential.user.uid]
 
