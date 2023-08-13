@@ -1,7 +1,7 @@
 "use client"
 
 import { Inter } from 'next/font/google'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useAuthContext } from "@components/hooks/useAuthContext"
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,6 @@ export default function Home() {
   const usernameRef = useRef()
   const passwordRef = useRef()
   const {error, logIn, currentUser} = useAuthContext()
-  const [fade, setFade] = useState(false)
   const router = useRouter()
 
 
@@ -28,13 +27,12 @@ export default function Home() {
     }
 
   useEffect(() => {
-    console.log("page useEffect fired")
     currentUser && currentUser.displayName && router.push(`/${currentUser.displayName.toLowerCase()}`)
   }, [currentUser])
 
 
   return (
-    <main className={`flex flex-col lg:flex-row min-h-[calc(100vh-64px)] ${fade && "fade-out"}`}>
+    <main className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)]">
 
       <div className="left-side w-[100%] min-h-[calc(100vh-64px)] bg-[url(/images/home_bg_left.jpg)] bg-cover grid place-items-center">
         <form className="flex flex-col bg-dcam-regular-blue bg-opacity-40 text-gray-100 rounded-md w-[340px] p-10 mx-auto" onSubmit={handleLogin}>

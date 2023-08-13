@@ -1,38 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Contractor Work Hours App (aka DCAM Staff Demo)
 
-## Getting Started
+See it live: [Contractor Work Hours App](https://glittering-youtiao-dec919.netlify.app/)
 
-First, run the development server:
+## Description
+A web app used by teachers of a music school business to record their students' attendance for the purpose of calculating their pay.
+Currently used by 6 teachers.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Background & Motivation
+This app was conceived in order to cut down on the amount of time it takes to calculate teacher pay. Prior to the app, the administrator had to check the school's attendance software to see which students were present or absent for a particular teacher over a period of two weeks and then calculate the pay based on that information. This same task had to be repeated for 6-7 teachers, which took a lot of time. This app solved that problem by giving teachers the ability to log in and record their own attendance. The app takes this attendance information, and based on each teacher's pay rate, calculates the total amount owed.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies
+The current version of this project was done with:
+* HTML + Tailwind CSS
+* React / Next.js
+* Firebase Auth
+* Firebase Firestore
+* Firebase Storage
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## State of Completion
+Completed and actively being used by 6 teachers. More improvements/features will be added going forward as per user feedback and business requirements.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Learning Lessons & Challenges
+### Working with Firestore data
+One of the trickier parts of this app was working with the database (Firestore) data. I first had to figure out how to best organize my raw data in the database itself, and then what data structure to use to store that data in my app once I retrieve it. This took a bit of trial and error but I eventually came up with what seemed to be the optimal solution. I also had to brush up on the methods that Firebase provides for performing CRUD operations with the todo tasks and calendar reminders. Lastly, I decided to set up a live listener to the database, so that any CRUD operations would be reflected in real time, without having to refresh the page. All this was a challenge but it also taught me a lot about working with databases, which I think is a great asset to have for Front End Developers under their belt.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Working with React Day Picker
+For the Calendar feature, I chose react-day-picker as my calendar. This was my very first time working with this component and it was a big learning curve. The trickiest part was figuring out how to limit the calendar to the time range that I wanted and how to highlight/circle the dates with content in them. I did notice that while the dates with content circle properly on most platforms, they do not show up when viewed on the iPhone/safari. Although this is not a big issue for us as the admin mostly works on a desktop or laptop computer, it is something I plan to look into further down the road.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Authentication
+Although I had worked with Firebase Auth briefly before, this project gave me an opportunity to refresh my knowledge on this topic. As mentioned earlier, I removed auth functionality for the demo version, but the commented out code can still be found in FirebaseContext.js file. Because I did not need any advanced auth-based functionality, I only used the Context API for the auth.
 
-## Learn More
+## Summary
+As mentioned, this app has been a work in progress and what you see now is its current state. I am always working to improve and optimize it even further and will continue to make updates and add more functionality as needed. For now though, it is fully-functional and is being used by the office front desk every day.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
