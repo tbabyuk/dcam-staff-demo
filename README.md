@@ -22,16 +22,22 @@ Completed and actively being used by 6 teachers. More improvements/features will
 
 ## Learning Lessons & Challenges
 ### Working with Firestore data
-One of the trickier parts of this app was working with the database (Firestore) data. I first had to figure out how to best organize my raw data in the database itself, and then what data structure to use to store that data in my app once I retrieve it. This took a bit of trial and error but I eventually came up with what seemed to be the optimal solution. I also had to brush up on the methods that Firebase provides for performing CRUD operations with the todo tasks and calendar reminders. Lastly, I decided to set up a live listener to the database, so that any CRUD operations would be reflected in real time, without having to refresh the page. All this was a challenge but it also taught me a lot about working with databases, which I think is a great asset to have for Front End Developers under their belt.
+I had to think carefully about how many collections I would need to have in Firestore for this app and what sort of data and data structure to use for each collection. This was a nice mental challenge but I enjoyed the process of figuring it out. In the end, I ended up a separate collection to store the student attendance and things like lesson duration and pay rate for each teacher. I also had to create a separate collection which I called "meta-data" which has each teacher as a document and stores information on whether or not they have submitted their attendance for a particular week. These collections are all accessed by the "Office Admin App" to be able to view this information for each teacher.
 
-### Working with React Day Picker
-For the Calendar feature, I chose react-day-picker as my calendar. This was my very first time working with this component and it was a big learning curve. The trickiest part was figuring out how to limit the calendar to the time range that I wanted and how to highlight/circle the dates with content in them. I did notice that while the dates with content circle properly on most platforms, they do not show up when viewed on the iPhone/safari. Although this is not a big issue for us as the admin mostly works on a desktop or laptop computer, it is something I plan to look into further down the road.
+### Figuring out the closest payday according to when the user logs in
+I had to figure out a way to figure out what the closest pay period is based on the date when a teacher logs in to their account. My way of solving this was to put all the pay days in an array and then take the date when the teacher logs in and compare it to that array using a for loop. If today's date is bigger than a particular payday, it just returns the next pay day. I am sure there are several ways in which I could have performed this logic, but my method seems to work well and I am proud of having solved this problem!
 
-### Authentication
-Although I had worked with Firebase Auth briefly before, this project gave me an opportunity to refresh my knowledge on this topic. As mentioned earlier, I removed auth functionality for the demo version, but the commented out code can still be found in FirebaseContext.js file. Because I did not need any advanced auth-based functionality, I only used the Context API for the auth.
+### Querying database for attendance status
+I had to create logic to be able to check whether or not a teacher has already submitted attendance for a particular week. If so, they would need to be redirected accordingly. For example if week 1 attendance was submitted and a teacher tries to go to that page again, they will get a message notifying them of this and be redirected to the week 2 attendance page. Likewise, if they submitted attendance for both weeks but try to do it again within the same pay period, they will be redirected to the "success" page, which tells them that their attendance for the closest pay period has already been submitted.
+
+### Setting up route guards
+I also had to figure out how to set up route guards based on whether or not a user is logged in and the logged-in user's id. So when a user attempts to access a particular route, the route guard performs a check on that user's id and decides whether or not they are permitted access. If they are not, it redirects them to the home page.
+
+### Using Firebase Storage
+This app was the very first time I used Firebase Storage. I used it in order to store profile images for each of the teachers. When a teacher logs in with correct credentials, their profile image is displayed next to the "Sign Out" button. This taught me that Storage is a good choice for storing such images.
 
 ## Summary
-As mentioned, this app has been a work in progress and what you see now is its current state. I am always working to improve and optimize it even further and will continue to make updates and add more functionality as needed. For now though, it is fully-functional and is being used by the office front desk every day.
+The app is currently being used by all the teachers at the school to log their hours. So far everything seems to work well but as always, I will continue to listen to user feedback and make necessary changes/updates accordingly. Most of all, I am happy to have made an app that is useful, solves a problem, and is used by real users!
 
 
 
