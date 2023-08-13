@@ -2,6 +2,20 @@
 
 See it live: [Contractor Work Hours App](https://glittering-youtiao-dec919.netlify.app/)
 
+## Login Credentials for demo/testing purposes:
+
+### User 1 - Paula
+Username: paula@gmail.com
+Password: paula123
+
+### User 2 - Michelle
+Username: michelle@gmail.com
+Password: michelle123
+
+### User 3 - Diego
+Username: diego@gmail.com
+Password: diego123
+
 ## Description
 A web app used by teachers of a music school business to record their students' attendance for the purpose of calculating their pay.
 Currently used by 6 teachers.
@@ -38,7 +52,3 @@ This app was the very first time I used Firebase Storage. I used it in order to 
 
 ## Summary
 The app is currently being used by all the teachers at the school to log their hours. So far everything seems to work well but as always, I will continue to listen to user feedback and make necessary changes/updates accordingly. Most of all, I am happy to have made an app that is useful, solves a problem, and is used by real users!
-
-
-
-
