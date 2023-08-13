@@ -5,15 +5,15 @@ See it live: [Contractor Work Hours App](https://glittering-youtiao-dec919.netli
 ## Login Credentials for demo/testing purposes:
 
 ### User 1 - Paula
-Username: paula@gmail.com
+Username: paula@gmail.com<br>
 Password: paula123
 
 ### User 2 - Michelle
-Username: michelle@gmail.com
+Username: michelle@gmail.com<br>
 Password: michelle123
 
 ### User 3 - Diego
-Username: diego@gmail.com
+Username: diego@gmail.com<br>
 Password: diego123
 
 ## Description
@@ -21,7 +21,7 @@ A web app used by teachers of a music school business to record their students' 
 Currently used by 6 teachers.
 
 ## Background & Motivation
-This app was conceived in order to cut down on the amount of time it takes to calculate teacher pay. Prior to the app, the administrator had to check the school's attendance software to see which students were present or absent for a particular teacher over a period of two weeks and then calculate the pay based on that information. This same task had to be repeated for 6-7 teachers, which took a lot of time. This app solved that problem by giving teachers the ability to log in and record their own attendance. The app takes this attendance information, and based on each teacher's pay rate, calculates the total amount owed.
+This app was conceived in order to cut down on the amount of time it takes to calculate teacher pay. Prior to the app, the administrator had to check the school's attendance software to see which students were present or absent for a particular teacher over a period of two weeks and then calculate the pay based on that information. This same task had to be repeated for 6-7 teachers, which was tedious and took a lot of time. This app solved that problem by giving teachers the ability to log in and record their own attendance. The app takes this attendance information, and based on each teacher's pay rate, calculates the total amount owed and displays this information to the school admin (see Office Admin App).
 
 ## Technologies
 The current version of this project was done with:
